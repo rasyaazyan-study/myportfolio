@@ -12,21 +12,24 @@
     --line: #e3d9c9;
     --text-muted: #6b6459;
     --radius: 4px;
+    --card-img-radius: 16px;
+    --card-radius: 24px;
+    --footer: #302d2c;
 }
 
 body {
-    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-family: -apple-system, "Poppins";
     color: var(--ink);
     background-color: var(--paper);
     line-height: 1.6;
 }
 
 h1, .brand {
-    font-family: "Space Grotesk", -apple-system, sans-serif;
+    font-family: "Poppins", -apple-system, sans-serif;
 }
 
 .container {
-    max-width: 960px;
+    max-width: 1000px;
     margin: 0 auto;
     padding: 0 1.5rem;
 }
@@ -171,9 +174,60 @@ h1, .brand {
 
 .site-footer {
     padding: 1.5rem;
-    color: var(--text-muted);
+    color: var(--paper);
+    background-color: var(--footer);
     font-size: 0.85rem;
     border-top: 1px solid var(--line);
+}
+
+/* Assignment 1 */
+
+/* milestone */
+#life-experience{
+    background-color: var(--line);
+}
+
+.card {
+    display: flex;
+    max-width: 900px;
+    margin: 2rem auto;
+    gap: 3rem;
+    border-radius: var(--card-radius);
+    background-color: var(--paper);
+    padding: 1.5rem;
+}
+
+.card-headline {
+    font-family: "Poppins", sans-serif;
+    font-size: 2.0rem;
+}
+
+.card img {
+    width: 300px;
+    height: 300px;
+    object-fit: cover;
+    border-radius: var(--card-img-radius);
+    flex-shrink: 0;
+}
+
+.card:nth-child(even) {
+    flex-direction: row-reverse;
+}
+
+.container-headline {
+    text-align: center;
+    font-size: 3rem;
+    color: var(--ink);
+}
+
+.container-body {
+    text-align: center;
+    font-size: 1rem;
+    color: var(--text-muted);
+}
+
+.highlights {
+    color: var(--accent-dark);
 }
 
 @media (max-width: 600px) {
@@ -192,4 +246,28 @@ h1, .brand {
     .social-links {
         justify-content: flex-start;
     }
+
+    /* assignment-1 */
+
+    /* life-experience */
+    .card {
+        display: flex;
+        flex-direction: column;
+        max-width: 100%;
+        margin: 1rem auto;
+        gap: 1rem;
+        border-radius: var(--card-radius);
+        background-color: var(--paper);
+        padding: 1.5rem;
+    }
+
+    .card img {
+        width: 100%;
+        height: 200px;
+    }
+
+    .card:nth-child(even) {
+        flex-direction: column;
+    }
+
 }
