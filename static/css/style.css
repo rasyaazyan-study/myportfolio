@@ -15,6 +15,7 @@
     --card-img-radius: 16px;
     --card-radius: 24px;
     --footer: #302d2c;
+    --organizational-experience: #e4e4e4;
 }
 
 body {
@@ -182,38 +183,7 @@ h1, .brand {
 
 /* Assignment 1 */
 
-/* milestone */
-#life-experience{
-    background-color: var(--line);
-}
-
-.card {
-    display: flex;
-    max-width: 900px;
-    margin: 2rem auto;
-    gap: 3rem;
-    border-radius: var(--card-radius);
-    background-color: var(--paper);
-    padding: 1.5rem;
-}
-
-.card-headline {
-    font-family: "Poppins", sans-serif;
-    font-size: 2.0rem;
-}
-
-.card img {
-    width: 300px;
-    height: 300px;
-    object-fit: cover;
-    border-radius: var(--card-img-radius);
-    flex-shrink: 0;
-}
-
-.card:nth-child(even) {
-    flex-direction: row-reverse;
-}
-
+/*Container*/
 .container-headline {
     text-align: center;
     font-size: 3rem;
@@ -228,6 +198,105 @@ h1, .brand {
 
 .highlights {
     color: var(--accent-dark);
+}
+
+/* Life Experience */
+#life-experience{
+    padding: 4.5rem + 10px;
+    background-color: var(--line);
+    clip-path: polygon(0 30px, 100% 0, 100% calc(100% - 30px), 0 100%);
+}
+
+.card {
+    display: flex;
+    max-width: 900px;
+    margin: 2rem auto;
+    gap: 3rem;
+    border-radius: var(--card-radius);
+    background-color: var(--paper);
+    padding: 1.5rem;
+}
+
+.card-headline {
+    font-family: "Poppins", sans-serif;
+    font-size: 1.5rem;
+}
+
+.card-text {
+    font-family: "Poppins", sans-serif;
+    font-size: 0.9rem;
+}
+
+.card img {
+    width: 300px;
+    height: 300px;
+    object-fit: cover;
+    border-radius: var(--card-img-radius);
+    flex-shrink: 0;
+}
+
+.card:nth-child(even) {
+    flex-direction: row-reverse;
+}
+
+/* Organizational Experience */
+
+#organizational-experience {
+    background-color: var(--organizational-experience);
+    margin-top: -30px;
+    padding-top: calc(4.5rem + 10px);
+}
+
+.card2 {
+    display: flex;
+    max-width: 700px;
+    margin: 2.5rem 0;
+    gap: 1.5rem;
+    border-radius: var(--card-radius);
+    background-color: var(--paper);
+    padding: 1.5rem;
+}
+
+.card2-position {
+    font-family: "Poppins", sans-serif;
+    font-size: 1.2rem;
+}
+
+.card2-organization {
+    font-family: "Poppins", sans-serif;
+    color: var(--accent-dark);
+    font-size: 0.9rem;
+}
+
+.card2-period {
+    font-family: "Poppins", sans-serif;
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    margin-bottom: 0.4rem;
+}
+
+.card2 img {
+    width: 25%;
+    height:100%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.card2-text {
+    font-family: "Poppins", sans-serif;
+    font-size: 0.8rem;
+    margin-bottom: 0.8rem;
+}
+
+.card2:nth-child(odd) {
+    transform: rotate(-1.5deg);
+    margin-left: auto
+}
+
+.card2:nth-child(even) {
+    transform: rotate(1.5deg);
+    flex-direction: row-reverse;
+    margin-right: auto
 }
 
 @media (max-width: 600px) {
@@ -249,12 +318,26 @@ h1, .brand {
 
     /* assignment-1 */
 
+    /*container*/
+    .container-headline {
+        text-align: center;
+        font-size: 2rem;
+        color: var(--ink);
+    }
+
+    .container-body {
+        text-align: center;
+        font-size: 0.8rem;
+        color: var(--text-muted);
+    }
+
     /* life-experience */
     .card {
         display: flex;
         flex-direction: column;
         max-width: 100%;
-        margin: 1rem auto;
+        margin: 1rem 0;
+        margin-bottom: 2rem;
         gap: 1rem;
         border-radius: var(--card-radius);
         background-color: var(--paper);
@@ -268,6 +351,36 @@ h1, .brand {
 
     .card:nth-child(even) {
         flex-direction: column;
+    }
+
+    /* Organizational Experience */
+    .card2:nth-child(odd) {
+        transform: rotate(-1.5deg);
+        display: flex;
+        flex-direction: column;
+        max-width: 100%;
+        margin: 2rem auto;
+        gap: 1rem;
+        border-radius: var(--card-radius);
+        background-color: var(--paper);
+        padding: 1.5rem;
+    }
+
+    .card2:nth-child(even) {
+        transform: rotate(1.5deg);
+        display: flex;
+        flex-direction: column;
+        max-width: 100%;
+        margin: 2rem auto;
+        gap: 1rem;
+        border-radius: var(--card-radius);
+        background-color: var(--paper);
+        padding: 1.5rem;
+    }
+
+    .card2 img {
+        width: 20%;
+        height: 100%;
     }
 
 }
