@@ -15,7 +15,7 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 #Load environment variables from .env file
-load_dotenv()
+load_dotenv(".env.prod")
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", "rasya-azyan-myportfolio.pws.cs.ui.ac.id"]
 PRODUCTION = os.getenv('PRODUCTION', 'False').lower() == 'true'
