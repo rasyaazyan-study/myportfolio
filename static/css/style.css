@@ -239,7 +239,7 @@ h1, .brand {
     flex-direction: row-reverse;
 }
 
-/* MVT Django*/
+/* Tutor 2 (MVT Django): Organizational Experience*/
 .experience-section {
     background-color: var(--organizational-experience);
     border-top: 1px solid var(--line);
@@ -351,6 +351,114 @@ h1, .brand {
     min-width: 0;
 }
 
+/* Tugas 2 (MVT Django): Educational Experience*/
+.education-section {
+    background-color: var(--organizational-experience);
+    border-top: 1px solid var(--line);
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+    border-left: 0.5rem;
+    border-right: 0.5rem;
+}
+
+.section-kicker {
+    color: var(--footer);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.education-section h1 {
+    margin: 0.4rem 0 0;
+    margin-bottom: 1rem;
+    font-size: 2.4rem;
+    text-align: center;
+}
+
+.education-grid {
+    display: flex;
+    flex-direction: column;
+}
+
+.education-card {
+    display: flex;
+    max-width: 1000px;
+    margin: 1.3rem 0;
+    gap: 2rem;
+    border-radius: var(--card-radius);
+    background-color: var(--paper);
+    padding: 1.5rem;
+    align-self: center;
+}
+
+.education-card:nth-child(odd) {
+    flex-direction: row-reverse;
+}
+
+.education-card img {
+    width: 40%;
+    height:100%;
+    object-fit: cover;
+    flex-shrink: 0;
+    border-radius: var(--card-img-radius);
+}
+
+.education-category {
+    color: var(--accent-dark);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.education-institution {
+    font-size: 2rem;
+}
+
+.education-position {
+    font-family: "Poppins", sans-serif;
+    color: var(--ink);
+    font-size: 2rem;
+    padding-bottom: 0;
+}
+
+.education-organization {
+    font-family: "Poppins", sans-serif;
+    color: var(--accent-dark);
+    font-size: 0.8rem;
+    padding-bottom: 1rem;
+}
+
+.education-description,
+.empty-state {
+    color: var(--text-muted);
+}
+
+.education-period {
+    color: var(--accent-dark);
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-top:1rem;
+    margin-bottom: 0.4rem;
+}
+
+.education-status {
+    margin-top: 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.education-content {
+    flex: 1;
+    min-width: 0;
+}
+
+/* drawer */
+.drawer-toggle {
+    display: none;
+}
+
 @media (max-width: 600px) {
     .brand {
         white-space: nowrap;
@@ -412,6 +520,35 @@ h1, .brand {
     .experience-card {
         display: flex;
         flex-direction: column;
+        max-width: 350px;
+        margin: 1.5rem 0;
+        gap: 1.5rem;
+        border-radius: var(--card-radius);
+        background-color: var(--paper);
+        padding: 1.5rem;
+        align-self: center;
+    }
+
+    .experience-card:nth-child(odd) {
+        transform: rotate(1deg);
+        flex-direction: column;
+        margin-left: auto
+    }
+
+    .experience-card:nth-child(even) {
+        transform: rotate(-1deg);
+        flex-direction: column;
+        margin-right: auto
+    }
+
+    .education-header {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .education-card {
+        display: flex;
+        flex-direction: column;
         max-width: 400px;
         margin: 1.5rem 0;
         gap: 1.5rem;
@@ -420,9 +557,98 @@ h1, .brand {
         padding: 1.5rem;
     }
 
-    .experience-card:nth-child(even) {
-        transform: rotate(1.5deg);
-        flex-direction: column;
-        margin-right: auto
+    .education-card img {
+        width: 100%;
+        height: 200px;
     }
+
+    .education-card:nth-child(even) {
+        flex-direction: column;
+    }
+
+    .education-card:nth-child(odd) {
+        flex-direction: column;
+    }
+
+    /* Drawer Header */
+    .drawer-toggle {
+    display: none;
+    }
+
+    .hamburger-button {
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        gap: 5px;
+        cursor: pointer;
+        z-index: 30;
+    }
+
+    .hamburger-button span {
+        width: 24px;
+        height: 2px;
+        background-color: var(--ink);
+        transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    .drawer-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+        z-index: 15;
+    }
+
+    .site-header .container {
+        position: relative;
+    }
+
+    .hamburger-button {
+        display: flex;
+    }
+
+    .site-header nav {
+        position: fixed;
+        top: 0;
+        right: 0;
+        height: 100%;
+        width: 300px;
+        background-color: var(--paper);
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.25rem;
+        padding: 5rem 1.5rem 1.5rem;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        z-index: 20;
+        border-left: 1px solid var(--line);
+    }
+
+    .drawer-toggle:checked ~ .container nav,
+    .drawer-toggle:checked + .hamburger-button + nav {
+        transform: translateX(0);
+    }
+
+    .drawer-overlay {
+        display: block;
+    }
+
+    .drawer-toggle:checked ~ .drawer-overlay {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .drawer-toggle:checked ~ .hamburger-button span:nth-child(1) {
+        transform: translateY(7px) rotate(45deg);
+    }
+    .drawer-toggle:checked ~ .hamburger-button span:nth-child(2) {
+        opacity: 0;
+    }
+    .drawer-toggle:checked ~ .hamburger-button span:nth-child(3) {
+        transform: translateY(-7px) rotate(-45deg);
+    }
+
 }

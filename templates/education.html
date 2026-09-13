@@ -30,31 +30,30 @@
     </header>
 
     <main>
-    <section class="experience-section" id="experience">
+    <section class="education-section" id="education">
         <div class="container">
-            <p class="section-kicker">Perjalanan saya sejauh ini</p>
-            <h1><span class="highlights">Organizational</span> Experience</h1>
+            <p class="section-kicker">Institusi yang membawa saya berkembang sejauh ini</p>
+            <h1><span class="highlights">Educational</span> Experience</h1>
 
-            <div class="experience-grid">
-                {% for experience in experience_list %}
-                    <article class="experience-card">
-                        {% if experience.thumbnail %}
-                            <img src="{{ experience.thumbnail }}" alt="{{ experience.organization }}">
+            <div class="education-grid">
+                {% for education in education_list %}
+                    <article class="education-card">
+                        {% if education.thumbnail %}
+                            <img src="{{ education.thumbnail }}" alt="{{ education.organization }}">
                         {% endif %}
-                        <div class = "experience-content">
-                            <span class="experience-category">
-                                {{ experience.get_category_display }}
+                        <div class = "education-content">
+                            <span class="education-category">
+                                {{ education.get_category_display }}
                             </span>
-                            <h2 class="experience-position">{{ experience.title }}</h2>
-                            <h4 class="experience-organization">{{ experience.organization }}</h4>
-                            <p class="experience-description">
-                                {{ experience.description }}
+                            <h4 class="education-institution">{{ education.institution }}</h4>
+                            <p class="education-description">
+                                {{ education.description }}
                             </p>
 
-                            <p class="experience-period">
-                                {{ experience.started_at|date:"M Y" }} —
-                                {% if experience.ended_at %}
-                                    {{ experience.ended_at|date:"M Y" }}
+                            <p class="education-period">
+                                {{ education.started_at|date:"Y" }} —
+                                {% if education.ended_at %}
+                                    {{ education.ended_at|date:"Y" }}
                                 {% else %}
                                     Sekarang
                                 {% endif %}
