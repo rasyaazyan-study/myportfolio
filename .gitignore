@@ -120,6 +120,3 @@ sftp-config.json
 
 # macOS
 .DS_Store
-
-#Main
-main/seed_portfolio.py

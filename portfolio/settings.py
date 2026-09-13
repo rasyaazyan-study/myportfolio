@@ -15,12 +15,7 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 
-APP_ENV = os.getenv("APP_ENV", "local")
-#Load environment variables from .env file
 load_dotenv()
-
-if APP_ENV == "prod":
-    load_dotenv(".env.prod", override=True)
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", "rasya-azyan-myportfolio.pws.cs.ui.ac.id"]
 CSRF_TRUSTED_ORIGINS = ["https://rasya-azyan-myportfolio.pws.cs.ui.ac.id",]
