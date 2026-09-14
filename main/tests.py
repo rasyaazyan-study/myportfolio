@@ -6,6 +6,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 from main.models import Experience
+from main.models import Education
 
 class MainTest(TestCase):
     def setUp(self):
@@ -58,4 +59,43 @@ class MainTest(TestCase):
         response = self.client.get(reverse("main:show_experience"))
 
         self.assertFalse(self.experience.is_ongoing)
+        self.assertNotContains(response, "Sekarang")
+        
+class EducationTest(TestCase):
+    def setUp(self):
+        self.education= Education.objects.create(
+            institution= "Universitas Indonesia",
+            description= "Saya suka belajar PBP",
+            category= "S1",
+            started_at=timezone.now(),
+        )
+        
+    def test_education_model(self):
+        self.assertEqual(str(self.education), "Universitas Indonesia")
+        self.assertEqual(self.education.category, "S1")
+        self.assertTrue(self.education.is_ongoing)
+        
+    def test_education_page(self):
+        response= self.client.get(reverse("main:show_education"))
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "education.html")
+        self.assertContains(response, self.education.institution)
+        self.assertContains(response, self.education.description)
+        self.assertContains(response, "Program Sarjana")
+        self.assertContains(response, "Sekarang")
+        self.assertContains(response, f'href="{reverse("main:show_main")}"')
+    
+    def test_empty_experience_page(self):
+        Education.objects.all().delete()
+        response = self.client.get(reverse("main:show_education"))
+    
+        self.assertContains(response, "Belum ada pengalaman yang ditambahkan.")
+    
+    def test_completed_experience(self):
+        self.education.ended_at = timezone.now()
+        self.education.save()
+        response = self.client.get(reverse("main:show_education"))
+    
+        self.assertFalse(self.education.is_ongoing)
         self.assertNotContains(response, "Sekarang")

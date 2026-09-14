@@ -20,7 +20,7 @@
                 <span></span>
                 <span></span>
             </label>
-            
+
             <nav>
                 <a href="{% url 'main:show_main' %}">Profile</a>
                 <a href="{% url 'main:show_experience' %}">Experience</a>
@@ -39,7 +39,7 @@
                 {% for education in education_list %}
                     <article class="education-card">
                         {% if education.thumbnail %}
-                            <img src="{{ education.thumbnail }}" alt="{{ education.organization }}">
+                            <img src="{{ education.thumbnail }}" alt="{{ education.institution }}">
                         {% endif %}
                         <div class = "education-content">
                             <span class="education-category">
