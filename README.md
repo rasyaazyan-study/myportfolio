@@ -18,3 +18,23 @@ Sejauh ini yang saya ketahui dan coba pertimbangkan adalah opsi untuk sekaligus 
 #AI DISCLOSURE
 
 Tugas 1: Dengan ini saya menyatakan menggunakan bantuan Generative AI dengan model Claude (Sonnet 5, Medium Effort) untuk bertanya dan membantu mencari tag HTML / CSS yang belum saya ketahui, sekaligus melakukan debugging jika terdapat bug yang tidak dapat/belum saya pahami letak maupun penyelesaiannya. Namun, penggunaan AI tetap melaui proses pengetikan ulang, pengecekan, serta perbaikan yang dapat dipertanggungjawabkan.
+
+=== TUGAS INDIVIDU 2 ===
+
+#PERTANYAAN REFLEKTIF
+
+1. Jelaskan alur yang terjadi ketika pengguna membuka halaman portofolio baru, mulai dari permintaan yang diterima proyek hingga data ditampilkan pada browser. Dalam jawabanmu, jelaskan peran urls.py proyek, urls.py aplikasi, view, model, dan template.
+
+Ketika user membuka web, maka Django akan mengecek melalui portfolio/urls.py apakah user membuka web admin atau web utama, ketika membuka web utama, maka akan diarahkan menuju main/urls.py untuk diarahkan menuju halaman utama (Profile). Di main/urls.py, Django secara default memanggil function show_main di main/views.py yang memanggil model dan merender data ke dalam file html, begitu juga ketika user memilih untuk berpindah halaman maka Django akan memanggil show_experience atau show_education dengan proses yang serupa. Setelah itu, function show akan mengembalikan return file html dengan digabungkan dengan data context dari model untuk diisi ke dalam tag. Dan setelah itu dikirim kembali kepada user sebagai response dari request.
+
+2. Mengapa data untuk bagian portofolio baru sebaiknya disimpan pada model dan tidak ditulis langsung di dalam template? Jelaskan dampaknya terhadap kemudahan pemeliharaan dan pengembangan aplikasi.
+
+Karena kode akan jadi sangat panjang, dan setiap menambah data kita harus membuat 1 elemen baru (misal card) yang harus di-deploy ulang. Sedangkan dengan model kita bisa mengupdate via admin tanpa menyentuh kode html sama sekali. Secara kemudahan pemeliharaan dan pengembangan, tentu akan lebih mudah, karena dalam skala tertentu dimana penambahan data dilakukan secara berkala oleh beberapa orang, ini akan sangat memudahkan dan minim potensi konflik pada git.
+
+3. Apa perbedaan fungsi makemigrations dan migrate pada Django? Berikan contoh perubahan model yang mengharuskanmu menjalankan kedua perintah tersebut.
+
+makemigrations hanya mencatat rencana perubahan model, sedangkan migrate untuk menjalankan proses pemindahan ke database. Contohnya adalah ketika mau menambah atau menghapus field pada main/models.py, setelah perubahan kita save, maka harus makemigrations dan migrate supaya perubahan tersimpan di database.
+
+#AI DISCLOSURE
+
+Tugas 2: Dengan ini saya menyatakan menggunakan bantuan Generative AI dengan model Claude (Sonnet 5, Medium Effort) untuk membantu melakukan Troubleshooting Organizational Experience saya yang tidak mau di-seed ke Database (karena file seed_portfolio.py masih di gitignore), serta membuat Drawer pada mobile view untuk memudahkan navigasi setelah adanya penambahan menu baru yaitu Education. Penggunaan AI dalam hal ini tetap melewati proses pengecekan lebih lanjut, pemahaman kode, dan dapat dipertanggungjawabkan.
