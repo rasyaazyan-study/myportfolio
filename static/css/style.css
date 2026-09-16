@@ -5,22 +5,31 @@
 }
 
 :root {
+    /* new */
+    --black: #000000;
     --ink: #1c1917;
+    --white: #ffffff;
+    --light-background: #eaeaea;
     --paper: #faf6f0;
-    --accent: #d95d39;
+    --dark-navy: #0F1820;
+    --green-button: #00AA14;
+    --dark-green: #008C16;
+    --red-button: #EE2737;
+    --dark-red: #AF272E;
+
+    /* default */
+    
     --accent-dark: #a8442a;
     --line: #e3d9c9;
     --text-muted: #6b6459;
     --radius: 4px;
     --card-img-radius: 16px;
     --card-radius: 24px;
-    --footer: #302d2c;
-    --organizational-experience: #e4e4e4;
 }
 
 body {
     font-family: -apple-system, "Poppins";
-    color: var(--ink);
+    color: var(--black);
     background-color: var(--paper);
     line-height: 1.6;
 }
@@ -36,7 +45,9 @@ h1, .brand {
 }
 
 .site-header {
-    border-bottom: 1px solid var(--line);
+    background-color: var(--black);
+    border-bottom: 3px solid var(--green-button);
+    z-index: 1;
 }
 
 .site-header .container {
@@ -49,7 +60,7 @@ h1, .brand {
 .brand {
     font-size: 1.3rem;
     font-weight: 700;
-    color: var(--ink);
+    color: var(--white);
     text-decoration: none;
 }
 
@@ -59,13 +70,32 @@ h1, .brand {
 }
 
 .site-header nav a {
-    color: var(--ink);
+    color: var(--white);
     text-decoration: none;
     font-size: 0.95rem;
 }
 
 .hero {
     padding: 4.5rem 0 5rem;
+}
+
+#profile {
+    background-image: url('/static/img/Bontang.jpg');
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+    padding-bottom: 10rem;
+    background-image:
+        linear-gradient(rgba(42, 59, 74, 0.8), rgba(15, 24, 32, 0.85)),
+        url('/static/img/Bontang.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#profile .container {
+    position: relative;
+    z-index: 1;
 }
 
 .hero-grid {
@@ -89,18 +119,19 @@ h1, .brand {
     font-size: 0.85rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--accent-dark);
+    color: var(--white);
     font-weight: 700;
     margin-bottom: 0.75rem;
 }
 
 .hero-identity h1 {
+    color: var(--white);
     font-size: clamp(3rem, 7vw, 5rem);
     line-height: 0.95;
 }
 
 .bio {
-    color: var(--text-muted);
+    color: var(--white);
     max-width: 480px;
     margin-bottom: 1.5rem;
 }
@@ -115,17 +146,18 @@ h1, .brand {
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: var(--text-muted);
+    color: var(--white);
     margin-bottom: 0.15rem;
 }
 
 .meta-row dd {
+    color: var(--white);
     font-weight: 600;
 }
 
 .social-links {
     display: flex;
-    gap: 0.5rem;
+    gap: 1rem;
     flex-wrap: wrap;
 }
 
@@ -134,15 +166,16 @@ h1, .brand {
     font-size: 0.85rem;
     font-weight: 600;
     text-decoration: none;
-    color: var(--paper);
-    background-color: var(--ink);
-    border-radius: var(--radius);
+    color: var(--white);
+    background-color: var(--green-button);
+    border-radius: 2rem;
     padding: 0.5rem 1.1rem;
     transition: background-color 0.2s ease;
 }
 
 .social-link:hover {
-    background-color: var(--accent);
+    color: var(--dark-green);
+    background-color: var(--light-background);
 }
 
 .hero-photo {
@@ -157,7 +190,7 @@ h1, .brand {
     left: 1.25rem;
     width: 100%;
     height: 100%;
-    background-color: var(--accent);
+    background-color: var(--dark-navy);
     border-radius: var(--radius);
     z-index: 0;
 }
@@ -170,13 +203,13 @@ h1, .brand {
     aspect-ratio: 1 / 1;
     object-fit: cover;
     border-radius: var(--radius);
-    border: 3px solid var(--ink);
+    border: 3px solid var(--black);
 }
 
 .site-footer {
     padding: 1.5rem;
     color: var(--paper);
-    background-color: var(--footer);
+    background-color: var(--black);
     font-size: 0.85rem;
     border-top: 1px solid var(--line);
 }
@@ -187,7 +220,7 @@ h1, .brand {
 .container-headline {
     text-align: center;
     font-size: 3rem;
-    color: var(--ink);
+    color: var(--black);
 }
 
 .container-body {
@@ -197,14 +230,19 @@ h1, .brand {
 }
 
 .highlights {
-    color: var(--accent-dark);
+    color: var(--green-button);
 }
 
 /* Life Experience */
 #life-experience{
-    padding: 4.5rem + 10px;
-    background-color: var(--line);
-    clip-path: polygon(0 30px, 100% 0, 100% 100%, 0 100%);
+    position: relative;
+    z-index: 1;
+    margin-top: -3rem;
+    padding: 4.5rem;
+    background-color: var(--light-background);
+    border-top-left-radius: 3rem;
+    border-top-right-radius: 3rem;
+    clip-path: polygon(0 0px, 100% 0, 100% 100%, 0 100%);
 }
 
 .card {
@@ -213,7 +251,7 @@ h1, .brand {
     margin: 2rem auto;
     gap: 3rem;
     border-radius: var(--card-radius);
-    background-color: var(--paper);
+    background-color: var(--white);
     padding: 1.5rem;
 }
 
@@ -241,8 +279,8 @@ h1, .brand {
 
 /* Tutor 2 (MVT Django): Organizational Experience*/
 .experience-section {
-    background-color: var(--organizational-experience);
-    border-top: 1px solid var(--line);
+    background-color: var(--light-background);
+    border-top: 1px solid var(--light-background);
     padding-top: 2.5rem;
     padding-bottom: 2.5rem;
     border-left: 0.5rem;
@@ -276,7 +314,7 @@ h1, .brand {
     margin: 1.3rem 0;
     gap: 2rem;
     border-radius: var(--card-radius);
-    background-color: var(--paper);
+    background-color: var(--white);
     padding: 1.5rem;
 }
 
@@ -299,7 +337,7 @@ h1, .brand {
 }
 
 .experience-category {
-    color: var(--accent-dark);
+    color: var(--dark-green);
     font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -315,14 +353,14 @@ h1, .brand {
 
 .experience-position {
     font-family: "Poppins", sans-serif;
-    color: var(--ink);
+    color: var(--black);
     font-size: 2rem;
     padding-bottom: 0;
 }
 
 .experience-organization {
     font-family: "Poppins", sans-serif;
-    color: var(--accent-dark);
+    color: var(--dark-green);
     font-size: 0.8rem;
     padding-bottom: 1rem;
 }
@@ -333,7 +371,7 @@ h1, .brand {
 }
 
 .experience-period {
-    color: var(--accent-dark);
+    color: var(--dark-green);
     font-size: 0.8rem;
     font-weight: 600;
     margin-top:1rem;
@@ -353,7 +391,7 @@ h1, .brand {
 
 /* Tugas 2 (MVT Django): Educational Experience*/
 .education-section {
-    background-color: var(--organizational-experience);
+    background-color: var(--light-background);
     border-top: 1px solid var(--line);
     padding-top: 2.5rem;
     padding-bottom: 2.5rem;
@@ -388,7 +426,7 @@ h1, .brand {
     margin: 1.3rem 0;
     gap: 2rem;
     border-radius: var(--card-radius);
-    background-color: var(--paper);
+    background-color: var(--white);
     padding: 1.5rem;
     align-self: center;
 }
@@ -406,7 +444,7 @@ h1, .brand {
 }
 
 .education-category {
-    color: var(--accent-dark);
+    color: var(--dark-green);
     font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -418,14 +456,14 @@ h1, .brand {
 
 .education-position {
     font-family: "Poppins", sans-serif;
-    color: var(--ink);
+    color: var(--black);
     font-size: 2rem;
     padding-bottom: 0;
 }
 
 .education-organization {
     font-family: "Poppins", sans-serif;
-    color: var(--accent-dark);
+    color: var(--dark-green);
     font-size: 0.8rem;
     padding-bottom: 1rem;
 }
@@ -436,7 +474,7 @@ h1, .brand {
 }
 
 .education-period {
-    color: var(--accent-dark);
+    color: var(--dark-green);
     font-size: 0.8rem;
     font-weight: 600;
     margin-top:1rem;
@@ -459,7 +497,100 @@ h1, .brand {
     display: none;
 }
 
+/* Tutorial 3 - Forms & Data Delivery */
+
+.experience-form, .education-form {
+    width: 100%;
+    max-width: 100%;
+    margin-top: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-weight: 700;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select:focus {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.7rem;
+    border: 1px solid var(--dark-green);
+    border-radius: var(--radius);
+    font: inherit;
+    transition:
+        border-color 0.2s ease,
+        outline-color 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: 2px solid var(--dark-green);
+    border-color: var(--dark-green);
+}
+
+.form-error {
+    color: var(--dark-red);
+    font-size: 0.85rem;
+    margin-top: 0.35rem;
+}
+
+.button {
+    display: inline-block;
+    height: fit-content;
+    border: 0;
+    border-radius: var(--radius);
+    padding: 0.65rem 1rem;
+    background: var(--green-button);
+    color: var(--white);
+    cursor: pointer;
+    font: inherit;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.button-secondary {
+    background: var(--red-button);
+}
+
 @media (max-width: 600px) {
+
+    #profile {
+        min-height: 95svh;
+        padding-bottom: 5rem;
+    }
+
+    .hero-photo {
+        grid-area: photo;
+        align-self: center;
+        position: relative;
+        max-width: 60%;
+    }
+
+    .photo-block {
+        position: absolute;
+        top: 2rem;
+        left: 2rem;
+        width: 70%;
+        height: 70%;
+        z-index: 0;
+    }
+
+    #life-experience {
+        border-top-left-radius: 1rem;
+        border-top-right-radius: 1rem;
+        padding: 2rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
     .brand {
         white-space: nowrap;
     }
@@ -472,10 +603,6 @@ h1, .brand {
             "details";
     }
 
-    .hero-photo {
-        max-width: 220px;
-    }
-
     .social-links {
         justify-content: flex-start;
     }
@@ -486,7 +613,7 @@ h1, .brand {
     .container-headline {
         text-align: center;
         font-size: 2rem;
-        color: var(--ink);
+        color: var(--black);
     }
 
     .container-body {
@@ -524,7 +651,7 @@ h1, .brand {
         margin: 1.5rem 0;
         gap: 1.5rem;
         border-radius: var(--card-radius);
-        background-color: var(--paper);
+        background-color: var(--white);
         padding: 1.5rem;
         align-self: center;
     }
@@ -553,7 +680,7 @@ h1, .brand {
         margin: 1.5rem 0;
         gap: 1.5rem;
         border-radius: var(--card-radius);
-        background-color: var(--paper);
+        background-color: var(--white);
         padding: 1.5rem;
     }
 
@@ -587,7 +714,7 @@ h1, .brand {
     .hamburger-button span {
         width: 24px;
         height: 2px;
-        background-color: var(--ink);
+        background-color: var(--white);
         transition: transform 0.3s ease, opacity 0.3s ease;
     }
 
@@ -595,7 +722,7 @@ h1, .brand {
         display: none;
         position: fixed;
         inset: 0;
-        background: rgba(0, 0, 0, 0.4);
+        background: rgba(0, 0, 0, 0.8);
         opacity: 0;
         pointer-events: none;
         transition: opacity 0.3s ease;
@@ -616,15 +743,15 @@ h1, .brand {
         right: 0;
         height: 100%;
         width: 300px;
-        background-color: var(--paper);
+        background-color: var(--black);
         flex-direction: column;
         align-items: flex-start;
-        gap: 1.25rem;
+        gap: 1.5rem;
         padding: 5rem 1.5rem 1.5rem;
         transform: translateX(100%);
         transition: transform 0.3s ease;
         z-index: 20;
-        border-left: 1px solid var(--line);
+        border-left: 1px solid var(--green-button);
     }
 
     .drawer-toggle:checked ~ .container nav,
