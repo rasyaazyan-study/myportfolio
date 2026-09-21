@@ -1,16 +1,15 @@
 {% extends "base.html" %}
 {% block meta %}
-    <title>Add Educational Experience - {{ name }}</title>
+    <title>Add Contact - {{ name }}</title>
 {% endblock meta %}
 {% block content %}
     <main>
         <section class="education-section">
             <div class="container">
-                <h1>Add New Educational Experience</h1>
+                <h1>Add New Contact</h1>
                 <form method="post"
-                      action="{% url 'main:create_education' %}"
-                      enctype="multipart/form-data"
-                      class="education-form">
+                        action=""
+                        class="education-form">
                     {% csrf_token %}
                     {% for field in form %}
                         <div class="form-group">
@@ -21,8 +20,8 @@
                             {% endfor %}
                         </div>
                     {% endfor %}
-                    <button type="submit" class="button">Tambah Riwayat Pendidikan</button>
-                    <a href="{% url 'main:show_education' %}" class="button button-secondary">Batal</a>
+                    <button type="submit" class="button">Tambah Kontak</button>
+                    <a href="{% url 'main:show_contact' %}" class="button button-secondary">Batal</a>
                 </form>
             </div>
         </section>

@@ -28,11 +28,11 @@
                 <a href="{% url 'main:show_main' %}">Profile</a>
                 <a href="{% url 'main:show_experience' %}">Experience</a>
                 <a href="{% url 'main:show_education' %}">Education</a>
-                <a href="{% url 'main:create_experience' %}">Create Experience</a>
-                <a href="{% url 'main:create_education' %}">Create Education</a>
+                <a href="{% url 'main:show_contact' %}">Contact</a>
             </nav>
         </div>
     </header>
+    {% block action_button %} {% endblock action_button %}
     {% block content %} {% endblock content %}
 
     <footer class="site-footer">

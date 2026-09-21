@@ -2,19 +2,25 @@
 {% block meta %}
     <title>{{ name }} - Portofolio</title>
 {% endblock meta %}
+
 {% block content %}
 
     <main>
     <section class="education-section" id="education">
         <div class="container">
-            <p class="section-kicker">Institusi yang membawa saya berkembang sejauh ini</p>
+            <p class="section-kicker">Institusi yang Membawa Saya Berjalan Sejauh Ini</p>
             <h1><span class="highlights">Educational</span> Experience</h1>
+
+            <div class="content-button">
+                <a href="{% url create_url_name %}" class="add-button floating">+ Add Education</a>
+            </div>
+            <a href="{% url create_url_name %}" class="add-button mobile">+</a>
 
             <div class="education-grid">
                 {% for education in education_list %}
                     <article class="education-card">
                         {% if education.thumbnail %}
-                            <img src="{{ education.thumbnail }}" alt="{{ education.institution }}">
+                            <img src="{{ education.thumbnail.url }}" alt="{{ education.institution }}">
                         {% endif %}
                         <div class = "education-content">
                             <span class="education-category">
@@ -33,6 +39,14 @@
                                     Sekarang
                                 {% endif %}
                             </p>
+
+                            <div class="card-actions">
+                                <a href="{% url 'main:edit_education' education.pk %}" class="button">Edit</a>
+                                <form method="post" action="{% url 'main:delete_education' education.pk %}" onsubmit="return confirm('Yakin ingin menghapus pengalaman ini?');">
+                                    {% csrf_token %}
+                                    <button type="submit" class="button button-secondary">Hapus</button>
+                                </form>
+                            </div>
                         </div>
                     </article>
                 {% empty %}

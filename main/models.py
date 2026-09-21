@@ -19,7 +19,7 @@ class Experience(models.Model):
     organization = models.CharField(max_length=255, blank=True, null=True)
     description = models.TextField()
     category = models.CharField(max_length=20, choices=EXPERIENCE_CHOICES, default='full-time')
-    thumbnail = models.URLField(blank=True, null=True)
+    thumbnail = models.ImageField(upload_to="thumbnails/", blank=True, null=True)
     started_at = models.DateTimeField()
     ended_at = models.DateTimeField(blank=True, null=True)
     
@@ -43,7 +43,7 @@ class Education(models.Model):
     institution = models.CharField(max_length=255, blank=True, null=True)
     description = models.TextField()
     category = models.CharField(max_length=20, choices=EDUCATION_CHOICES)
-    thumbnail = models.URLField(blank=True, null=True)
+    thumbnail = models.ImageField(upload_to="thumbnails/", blank=True, null=True)
     started_at = models.DateTimeField()
     ended_at = models.DateTimeField(blank=True, null=True)
     
@@ -53,3 +53,24 @@ class Education(models.Model):
     @property
     def is_ongoing(self):
         return self.ended_at is None
+    
+#Tugas Individu 3
+class Contact(models.Model):
+    CONTACT_CHOICES = [
+        ('email', 'Email'),
+        ('instagram', 'Instagram'),
+        ('linkedin', 'Linkedin'),
+        ('whatsapp', 'Whatsapp'),
+        ('line', 'Line'),
+        ('github', 'Github'),
+        ('others', 'Lainnya'),
+    ]
+    
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=100)
+    category = models.CharField(max_length=20, choices=CONTACT_CHOICES)
+    value = models.CharField(max_length=255)
+    url = models.URLField(blank=True)
+    
+    def __str__(self):
+            return self.name

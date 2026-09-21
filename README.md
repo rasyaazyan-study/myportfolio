@@ -38,3 +38,22 @@ makemigrations hanya mencatat rencana perubahan model, sedangkan migrate untuk m
 #AI DISCLOSURE
 
 Tugas 2: Dengan ini saya menyatakan menggunakan bantuan Generative AI dengan model Claude (Sonnet 5, Medium Effort) untuk membantu melakukan Troubleshooting Organizational Experience saya yang tidak mau di-seed ke Database (karena file seed_portfolio.py masih di gitignore), serta membuat Drawer pada mobile view untuk memudahkan navigasi setelah adanya penambahan menu baru yaitu Education. Penggunaan AI dalam hal ini tetap melewati proses pengecekan lebih lanjut, pemahaman kode, dan dapat dipertanggungjawabkan.
+
+=== TUGAS INDIVIDU 3 ===
+1. Jelaskan mengapa kita menggunakan ModelForm pada Django alih-alih membuat form HTML secara manual. Selain itu, jelaskan pula mengapa kita diwajibkan menambahkan {% csrf_token %} pada form tersebut!
+
+Dengan ModelForm kita tidak perlu menulis ulang form yang di HTML secara manual, yang mana jika datanya berjumlah banyak akan membuat pengelolaan kode menjadi semakin sulit dan tidak rapi terutama saat terdapat eror atau typo. Dengan ModelForm kita cukup menyediakan template field yang perlu diterapkan di halaman yang diinginkan. 
+
+CSRF Token merupakan kode rahasia yang sifatnya unik dan dibuat oleh server untuk melindungi aplikasi dari unauthorized request, dengan menggunakan {% csrf_token %}, kita dapat mencegah penyerang aplikasi mengubah request yang awalnya ke server Django menjadi ke suatu API yang berbahaya dan mengirim data request ke mereka.
+
+2. Pada Tutorial 03, kita membahas format data JSON dan XML. Mengapa JSON lebih disukai dalam pengembangan aplikasi web modern dibandingkan XML?
+
+Karena JSON lebih ringkas, mudah dibaca, dan browser dapat mengubah JSON menjadi objek, tanpa perlu parsing rumit seperti XML.
+
+3. Jelaskan alur yang terjadi saat kamu menggunakan fungsi view untuk mengembalikan data portofoliomu dalam bentuk JSON. Mengapa kita perlu melakukan proses serialization pada model Django sebelum datanya dikembalikan?
+
+Ketika client membuka url, Django akan meneruskan view ke fungsi yang sesuai. Setelah itu, view akan mengambil data dari database, Data diubah menjadi JSON lalu view mengirim teks sebagai response yang dapat dibaca client.
+
+#AI DISCLOSURE
+
+Tugas 3: Dengan ini saya menyatakan menggunakan bantuan Generative AI dengan model Claude (Sonnet 5, Medium Effort) untuk membantu membuat floating button, timeline pada experience, model & views update untuk fitur edit dan delete, serta troubleshooting beberapa kesalahan dalam menulis kode (typo). Penggunaan AI dalam hal ini tetap melewati proses pengecekan lebih lanjut, pemahaman kode, dan dapat dipertanggungjawabkan.

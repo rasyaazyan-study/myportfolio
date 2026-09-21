@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block meta %}
+    <title>{{ name }} - Portofolio</title>
+{% endblock meta %}
+
+{% block content %}
+
+    <main>
+    <section class="contact-section" id="contact">
+        <div class="container">
+            <p class="section-kicker">Butuh Informasi Lebih Lanjut?</p>
+            <h1><span class="highlights">Hubungi</span> Saya</h1>
+
+            <div class="content-button">
+                <a href="{% url create_url_name %}" class="add-button floating">+ Add Contact</a>
+            </div>
+            <a href="{% url create_url_name %}" class="add-button mobile">+</a>
+
+            <div class="contact-grid">
+                {% for contact in contact_list %}
+                    <article class="contact-card">
+                        <div class = "contact-content">
+                            <span class="contact-category">{{ contact.get_category_display }}</span>
+                            <h4 class="contact-name">{{ contact.name }}</h4>
+                            <p class="contact-value">{{ contact.value }}</p>
+                            {% if contact.url %}
+                                <a href="{{ contact.url }}" target="_blank" rel="noopener noreferrer" class="button small">Kunjungi</a>
+                            {% endif %}
+
+                            <div class="card-actions">
+                                <a href="{% url 'main:edit_contact' contact.pk %}" class="button small black">Edit</a>
+                                <form method="post" action="{% url 'main:delete_contact' contact.pk %}" onsubmit="return confirm('Yakin ingin menghapus kontak ini?');">
+                                    {% csrf_token %}
+                                    <button type="submit" class="button button-secondary small">Hapus</button>
+                                </form>
+                            </div>
+                        </div>
+                    </article>
+                {% empty %}
+                    <p class="empty-state">
+                        Belum ada kontak yang ditambahkan.
+                    </p>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    </main>
+{% endblock content %}

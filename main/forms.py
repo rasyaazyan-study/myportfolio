@@ -1,8 +1,8 @@
-from django.forms import ModelForm, TextInput, Textarea, URLInput, Select, DateTimeInput
+from django.forms import ModelForm, TextInput, Textarea, Select, DateTimeInput, URLInput
 
 from main.models import Experience
-
 from main.models import Education
+from main.models import Contact
 
 class ExperienceForm(ModelForm):
     class Meta:
@@ -49,11 +49,6 @@ class ExperienceForm(ModelForm):
             "category": Select(
                 choices={
                     "placeholder": Experience.EXPERIENCE_CHOICES,
-                }
-            ),
-            "thumbnail": URLInput(
-                attrs={
-                    "placeholder": "https://...",
                 }
             ),
             "started_at": DateTimeInput(
@@ -107,11 +102,6 @@ class EducationForm(ModelForm):
                     "placeholder": Education.EDUCATION_CHOICES,
                 }
             ),
-            "thumbnail": URLInput(
-                attrs={
-                    "placeholder": "https://...",
-                }
-            ),
             "started_at": DateTimeInput(
                 attrs={
                     "placeholder": "datetime-local",
@@ -122,4 +112,41 @@ class EducationForm(ModelForm):
                     "placeholder": "datetime-local",
                 }
             ),
+        }
+        
+class ContactForm(ModelForm):
+    class Meta:
+        model = Contact
+        fields = [
+            "name",
+            "category",
+            "value",
+            "url"
+        ]
+        
+        labels = {
+            "name": "Nama Kontak",
+            "category": "Jenis Kontak",
+            "value": "Nomor/Username Kontak",
+            "url": "Link Kontak"
+        }
+        
+        widgets = {
+            "name": TextInput(
+                attrs={
+                    "placeholder": "Linkedin Pribadi",
+                    "maxlength": 100,
+                }
+            ),
+            "value": TextInput(
+                attrs={
+                    "placeholder": "Linkedin Pribadi",
+                    "maxlength": 255,
+                }
+            ),
+            "url": URLInput(
+                attrs={
+                    "placeholder": "https://linkedin.com/in/rasyaazyan"
+                }
+            )
         }

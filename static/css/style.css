@@ -12,6 +12,8 @@
     --light-background: #eaeaea;
     --paper: #faf6f0;
     --dark-navy: #0F1820;
+    --blue: #01AED6;
+    --light-blue: #d8f2f7;
     --green-button: #00AA14;
     --dark-green: #008C16;
     --red-button: #EE2737;
@@ -22,7 +24,8 @@
     --accent-dark: #a8442a;
     --line: #e3d9c9;
     --text-muted: #6b6459;
-    --radius: 4px;
+    --radius: 0.6rem;
+    --button-radius: 4rem;
     --card-img-radius: 16px;
     --card-radius: 24px;
 }
@@ -32,6 +35,7 @@ body {
     color: var(--black);
     background-color: var(--paper);
     line-height: 1.6;
+    min-height: 100vh;
 }
 
 h1, .brand {
@@ -273,6 +277,14 @@ h1, .brand {
     flex-shrink: 0;
 }
 
+.card-actions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
 .card:nth-child(even) {
     flex-direction: row-reverse;
 }
@@ -304,11 +316,19 @@ h1, .brand {
 }
 
 .experience-grid {
+    position: relative;
     display: flex;
     flex-direction: column;
+    max-width: 800px;
+    margin: 0 auto;
+    padding-left: 3rem;
 }
 
 .experience-card {
+    --offset: 3rem;
+    --dot: 1.1rem;
+
+    position: relative;
     display: flex;
     max-width: 750px;
     margin: 1.3rem 0;
@@ -316,17 +336,37 @@ h1, .brand {
     border-radius: var(--card-radius);
     background-color: var(--white);
     padding: 1.5rem;
+    margin-left: 2.4rem;
 }
 
-.experience-card:nth-child(even) {
-    transform: rotate(-1.5deg);
-    margin-left: auto
+.experience-card::before {
+    content:"";
+    position: absolute;
+    left: calc(-1 * var(--offset));
+    top: 1.5rem;
+    height: calc(100% + 4.1rem);
+    width: 3px;
+    background: var(--dark-navy);
+    transform: translateX(-50%);
+    z-index: 1;
 }
 
-.experience-card:nth-child(odd) {
-    transform: rotate(1.5deg);
-    flex-direction: row-reverse;
-    margin-right: auto
+.experience-card::after {
+    content: "";
+    position: absolute;
+    left: calc(-1 * var(--offset));
+    top: 1.5rem;
+    height: var(--dot);
+    width: var(--dot);
+    border: 3px solid var(--dark-green);
+    background: var(--white);
+    border-radius: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+}
+
+.experience-card:last-of-type::before {
+    display: none;
 }
 
 .experience-card img {
@@ -422,7 +462,7 @@ h1, .brand {
 
 .education-card {
     display: flex;
-    max-width: 1000px;
+    max-width: 800px;
     margin: 1.3rem 0;
     gap: 2rem;
     border-radius: var(--card-radius);
@@ -432,7 +472,14 @@ h1, .brand {
 }
 
 .education-card:nth-child(odd) {
+    transform: rotate(-1deg);
+    margin-left: auto
+}
+
+.education-card:nth-child(even) {
+    transform: rotate(1deg);
     flex-direction: row-reverse;
+    margin-right: auto
 }
 
 .education-card img {
@@ -499,6 +546,104 @@ h1, .brand {
 
 /* Tutorial 3 - Forms & Data Delivery */
 
+.contact-section {
+    background-color: var(--light-background);
+    border-top: 1px solid var(--line);
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+    border-left: 0.5rem;
+    border-right: 0.5rem;
+}
+
+.contact-section h1 {
+    margin: 0.4rem 0 0;
+    margin-bottom: 1rem;
+    font-size: 2.4rem;
+    text-align: center;
+}
+
+.contact-grid {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.25rem;
+    margin: 1.5rem auto 0;
+    max-width: 800px;
+    height: 100%;
+    padding: 1rem;
+    border-radius: calc(var(--card-radius) + 0.8rem);
+    background-color: var(--blue);
+}
+
+.contact-value {
+    margin-bottom: 3.1rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.contact-card {
+    flex: 0 0 auto;
+    width: 240px;
+    aspect-ratio: 1 / 1;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--card-radius);
+    background-color: var(--light-blue);
+    padding: 1.5rem;
+}
+
+.contact-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex: 1;
+}
+
+.contact-card .card-actions {
+    margin-top: auto;
+}
+
+.contact-category {
+    color: var(--dark-green);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.empty-state {
+    color: var(--text-muted);
+}
+
+.button.small {
+    padding: 0.3rem 0.8rem;
+    font-size: 0.8rem;
+    border-radius: var(--button-radius);
+}
+
+.button.small:hover {
+    background-color: var(--white);
+    color: var(--green-button);
+}
+
+.button.button-secondary.small:hover {
+    background-color: var(--white);
+    color: var(--red-button);
+}
+
+.button.small.black {
+    padding: 0.3rem 0.8rem;
+    font-size: 0.8rem;
+    border-radius: var(--button-radius);
+    background-color: var(--black);
+}
+
+.button.small.black:hover {
+    background-color: var(--white);
+    color: var(--black);
+}
+
 .experience-form, .education-form {
     width: 100%;
     max-width: 100%;
@@ -514,26 +659,45 @@ h1, .brand {
     margin-bottom: 0.4rem;
     font-weight: 700;
 }
-
-.form-group input,
+.form-group input:not([type="checkbox"]),
 .form-group textarea,
-.form-group select:focus {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 0.7rem;
+.form-group select {
     border: 1px solid var(--dark-green);
     border-radius: var(--radius);
+    background-color: var(--white);
     font: inherit;
-    transition:
-        border-color 0.2s ease,
-        outline-color 0.2s ease;
+    outline: 2px solid transparent;
+    transition: border-color 0.2s ease, outline-color 0.2s ease;
+}
+
+.form-group input:not([type="checkbox"]),
+.form-group textarea {
+    width: 100%;
+    padding: 0.7rem;
+}
+
+.form-group select {
+    padding: 0.4rem 0.6rem;
+}
+
+.form-group input[type="file"] {
+    margin-top: 0.5rem;
 }
 
 .form-group input:focus,
 .form-group textarea:focus,
 .form-group select:focus {
-    outline: 2px solid var(--dark-green);
-    border-color: var(--dark-green);
+    outline-color: var(--dark-green);
+}
+
+.form-group input[type="checkbox"] {
+    margin: 0 0.3rem 0 0.5rem;
+    vertical-align: middle;
+}
+
+.form-group input[type="checkbox"] + label {
+    display: inline;
+    font-weight: 400;
 }
 
 .form-error {
@@ -546,7 +710,7 @@ h1, .brand {
     display: inline-block;
     height: fit-content;
     border: 0;
-    border-radius: var(--radius);
+    border-radius: var(--button-radius);
     padding: 0.65rem 1rem;
     background: var(--green-button);
     color: var(--white);
@@ -556,8 +720,53 @@ h1, .brand {
     text-decoration: none;
 }
 
+.button:hover {
+    color: var(--dark-green);
+    background-color: var(--light-background);
+}
+
 .button-secondary {
     background: var(--red-button);
+}
+
+.button-secondary:hover {
+    background: var(--light-background);
+    color: var(--red-button);
+}
+
+/* TI 3: Form & Data Entry*/
+.content-button {
+    position: fixed;
+    right: 2rem;
+    bottom: 2rem;
+    z-index: 100;
+    margin: 0;
+}
+
+.add-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 2.5rem;
+    padding: 0 1.5rem;
+    border: 0;
+    border-radius: 1.25rem;
+    background: var(--green-button);
+    color: var(--white);
+    cursor: pointer;
+    font: inherit;
+    font-weight: 500;
+    line-height: 1;
+    text-decoration: none;
+}
+
+.add-button:hover {
+    color: var(--dark-green);
+    background-color: var(--white);
+}
+
+.add-button.mobile{
+    display: none;
 }
 
 @media (max-width: 600px) {
@@ -654,18 +863,6 @@ h1, .brand {
         background-color: var(--white);
         padding: 1.5rem;
         align-self: center;
-    }
-
-    .experience-card:nth-child(odd) {
-        transform: rotate(1deg);
-        flex-direction: column;
-        margin-left: auto
-    }
-
-    .experience-card:nth-child(even) {
-        transform: rotate(-1deg);
-        flex-direction: column;
-        margin-right: auto
     }
 
     .education-header {
@@ -776,6 +973,57 @@ h1, .brand {
     }
     .drawer-toggle:checked ~ .hamburger-button span:nth-child(3) {
         transform: translateY(-7px) rotate(-45deg);
+    }
+
+    /*TI 3*/
+    .content-button {
+        display: none;
+    }
+
+    .add-button.mobile {
+        display: inline-flex;
+        position: fixed;
+        right: 1.5rem;
+        bottom: 1.5rem;
+        z-index: 100;
+        width: 3.5rem;
+        height: 3.5rem;
+        padding: 0;
+        border-radius: 50%;
+        font-size: 2rem;
+        font-weight: 400;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    }
+
+    .contact-grid {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1.25rem;
+        margin: 1.5rem auto 0;
+        max-width: 400px;
+        height: 100%;
+        padding: 1rem;
+        border-radius: calc(var(--card-radius) + 0.8rem);
+        background-color: var(--blue);
+    }
+
+    .contact-value {
+        margin-bottom: 0.5rem;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+    }
+
+    .contact-card {
+        flex: 0 0 auto;
+        width: 500px;
+        aspect-ratio: 2 / 1;
+        display: flex;
+        flex-direction: column;
+        border-radius: var(--card-radius);
+        background-color: var(--light-blue);
+        padding: 1.5rem;
     }
 
 }
