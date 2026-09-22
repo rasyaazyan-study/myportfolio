@@ -487,6 +487,14 @@ h1, .brand {
     outline: 2px solid var(--dark-green);
 }
 
+.education-card:hover:nth-child(odd) {
+    transform: rotate(1deg);
+}
+
+.education-card:hover:nth-child(even) {
+    transform: rotate(-1deg);
+}
+
 .education-card:nth-child(odd) {
     transform: rotate(-1deg);
     margin-left: auto
@@ -620,6 +628,14 @@ h1, .brand {
     scale: 103%;
     box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
     outline: 2px solid var(--dark-green);
+}
+
+.contact-card:hover:nth-child(odd) {
+    rotate: -1deg;
+}
+
+.contact-card:hover:nth-child(even) {
+    rotate: 1deg;
 }
 
 .contact-content {
@@ -828,6 +844,14 @@ h1, .brand {
     outline: 2px solid var(--dark-green);
     box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
     scale: 103%;
+}
+
+.message-card:hover:nth-child(odd) {
+    transform: rotate(-1deg);
+}
+
+.message-card:hover:nth-child(even) {
+    transform: rotate(1deg);
 }
 
 .message-card:nth-child(odd) {
