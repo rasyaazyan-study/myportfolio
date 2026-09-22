@@ -25,11 +25,17 @@
             </label>
 
             <nav>
-                <a href="{% url 'main:show_main' %}">Profile</a>
-                <a href="{% url 'main:show_experience' %}">Experience</a>
-                <a href="{% url 'main:show_education' %}">Education</a>
-                <a href="{% url 'main:show_contact' %}">Contact</a>
-            </nav>
+        <a href="{% url 'main:show_main' %}">Profile</a>
+        <a href="{% url 'main:show_experience' %}">Experience</a>
+        <a href="{% url 'main:show_education' %}">Education</a>
+        <a href="{% url 'main:show_message' %}">Message</a>
+        {% if user.is_authenticated %}
+            <a href="{% url 'main:show_contact' %}">Contact</a>
+            <a class="button button-secondary small" href="{% url 'main:logout' %}">Logout</a>
+        {% else %}
+            <a class="button small" href="{% url 'main:login' %}">Login</a>
+        {% endif %}
+    </nav>
         </div>
     </header>
     {% block action_button %} {% endblock action_button %}

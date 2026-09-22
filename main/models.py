@@ -1,7 +1,7 @@
-from django.db import models
-
 # Create your models here.
 import uuid
+
+from django.contrib.auth.models import User
 from django.db import models
 
 class Experience(models.Model):
@@ -22,6 +22,9 @@ class Experience(models.Model):
     thumbnail = models.ImageField(upload_to="thumbnails/", blank=True, null=True)
     started_at = models.DateTimeField()
     ended_at = models.DateTimeField(blank=True, null=True)
+    starred_by = models.ManyToManyField(
+        User, related_name="starred_experience", blank=True
+    )
     
     def __str__(self):
         return self.title
@@ -74,3 +77,17 @@ class Contact(models.Model):
     
     def __str__(self):
             return self.name
+        
+#Tugas Individu 4
+class Message(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    sender = models.CharField(max_length=100, blank=True, null=True)
+    to = models.CharField(max_length=100, blank=True, null=True)
+    value = models.TextField()
+    starred_by = models.ManyToManyField(
+        User, related_name="starred_message", blank=True
+    )
+    
+    def __str__(self):
+            return self.value

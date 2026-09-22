@@ -23,17 +23,19 @@
                             <span class="contact-category">{{ contact.get_category_display }}</span>
                             <h4 class="contact-name">{{ contact.name }}</h4>
                             <p class="contact-value">{{ contact.value }}</p>
-                            {% if contact.url %}
-                                <a href="{{ contact.url }}" target="_blank" rel="noopener noreferrer" class="button small">Kunjungi</a>
-                            {% endif %}
 
+                            {% if user.is_superuser %}
                             <div class="card-actions">
+                                {% if contact.url %}
+                                    <a href="{{ contact.url }}" target="_blank" rel="noopener noreferrer" class="button small">Kunjungi</a>
+                                {% endif %}
                                 <a href="{% url 'main:edit_contact' contact.pk %}" class="button small black">Edit</a>
                                 <form method="post" action="{% url 'main:delete_contact' contact.pk %}" onsubmit="return confirm('Yakin ingin menghapus kontak ini?');">
                                     {% csrf_token %}
                                     <button type="submit" class="button button-secondary small">Hapus</button>
                                 </form>
                             </div>
+                            {% endif %}
                         </div>
                     </article>
                 {% empty %}

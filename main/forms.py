@@ -1,8 +1,6 @@
 from django.forms import ModelForm, TextInput, Textarea, Select, DateTimeInput, URLInput
 
-from main.models import Experience
-from main.models import Education
-from main.models import Contact
+from main.models import Experience, Education, Contact, Message
 
 class ExperienceForm(ModelForm):
     class Meta:
@@ -147,6 +145,39 @@ class ContactForm(ModelForm):
             "url": URLInput(
                 attrs={
                     "placeholder": "https://linkedin.com/in/rasyaazyan"
+                }
+            )
+        }
+        
+class MessageForm(ModelForm):
+    class Meta:
+        model = Message
+        fields = [
+            "sender",
+            "to",
+            "value",
+        ]
+        
+        labels = {
+            "sender": "Dari",
+            "to": "Untuk",
+            "value": "Pesan",
+        }
+        
+        widgets = {
+            "sender": TextInput(
+                attrs={
+                    "placeholder": "Anonim (Opsional)",
+                }
+            ),
+            "to": TextInput(
+                attrs={
+                    "placeholder": "Semua (Opsional)",
+                }
+            ),
+            "value": TextInput(
+                attrs={
+                    "placeholder": "Tulis pesanmu"
                 }
             )
         }

@@ -13,6 +13,10 @@
     --paper: #faf6f0;
     --dark-navy: #0F1820;
     --blue: #01AED6;
+    --dark-blue: #0080A0;
+    --purple: #94028B;
+    --pink: #FF009C;
+    --yellow: #FFA500;
     --light-blue: #d8f2f7;
     --green-button: #00AA14;
     --dark-green: #008C16;
@@ -259,6 +263,12 @@ h1, .brand {
     padding: 1.5rem;
 }
 
+.card:hover {
+    scale: 102%;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
+    outline: 2px solid var(--dark-green);
+}
+
 .card-headline {
     font-family: "Poppins", sans-serif;
     font-size: 1.5rem;
@@ -471,6 +481,12 @@ h1, .brand {
     align-self: center;
 }
 
+.education-card:hover {
+    scale: 102%;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
+    outline: 2px solid var(--dark-green);
+}
+
 .education-card:nth-child(odd) {
     transform: rotate(-1deg);
     margin-left: auto
@@ -569,8 +585,9 @@ h1, .brand {
     justify-content: center;
     gap: 1.25rem;
     margin: 1.5rem auto 0;
+    width: 100%;
     max-width: 800px;
-    height: 100%;
+    max-height: 100%;
     padding: 1rem;
     border-radius: calc(var(--card-radius) + 0.8rem);
     background-color: var(--blue);
@@ -585,13 +602,24 @@ h1, .brand {
 .contact-card {
     flex: 0 0 auto;
     width: 240px;
-    aspect-ratio: 1 / 1;
     max-width: 100%;
+    max-height: 100%;
     display: flex;
     flex-direction: column;
+    column-wrap: wrap;
     border-radius: var(--card-radius);
     background-color: var(--light-blue);
     padding: 1.5rem;
+}
+
+.card-actions {
+    flex-wrap: wrap;
+}
+
+.contact-card:hover {
+    scale: 103%;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
+    outline: 2px solid var(--dark-green);
 }
 
 .contact-content {
@@ -601,15 +629,16 @@ h1, .brand {
     flex: 1;
 }
 
-.contact-card .card-actions {
-    margin-top: auto;
-}
-
 .contact-category {
     color: var(--dark-green);
     font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
+}
+
+.contact-action {
+    margin-top: 1rem;
+    flex-direction: row;
 }
 
 .empty-state {
@@ -767,6 +796,70 @@ h1, .brand {
 
 .add-button.mobile{
     display: none;
+}
+
+.message-form {
+    background-color: var(--purple);
+    color: var(--white);
+    border-radius: var(--card-radius);
+    transform: rotate(1deg);
+    max-width: 100%;
+    height: 100%;
+    padding: 1.5rem;
+    margin-top: 2rem;
+    margin-bottom: 3.2rem;
+}
+
+.message-form button {
+    margin-top: 1.5rem; 
+}
+
+.message-card {
+    background-color: var(--white);
+    color: var(--black);
+    border-radius: var(--card-radius);
+    padding: 1rem;
+    max-width: 300px;
+    height: 100%;
+    flex-direction: column;
+}
+
+.message-card:hover {
+    outline: 2px solid var(--dark-green);
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
+    scale: 103%;
+}
+
+.message-card:nth-child(odd) {
+    transform: rotate(1deg);
+}
+.message-card:nth-child(even) {
+    transform: rotate(-1deg);
+}
+
+.message-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.25rem;
+    margin-top: 2rem;
+}
+
+.message-meta {
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: 0.9rem;
+    color: var(--black);
+    margin-bottom: 0.75rem;
+}
+
+.message-date {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    margin-top: 0.75rem;
+}
+
+.card-star {
+    margin-top: 1rem;
 }
 
 @media (max-width: 600px) {
@@ -1017,13 +1110,27 @@ h1, .brand {
 
     .contact-card {
         flex: 0 0 auto;
-        width: 500px;
+        width: 100%;
         aspect-ratio: 2 / 1;
         display: flex;
         flex-direction: column;
         border-radius: var(--card-radius);
         background-color: var(--light-blue);
         padding: 1.5rem;
+    }
+
+    .message-list {
+        grid-template-columns: repeat(1, 1fr);
+    }
+
+    .message-card {
+        background-color: var(--white);
+        color: var(--black);
+        border-radius: var(--card-radius);
+        padding: 1rem;
+        max-width: 100%;
+        height: 100%;
+        flex-direction: column;
     }
 
 }

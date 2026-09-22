@@ -40,6 +40,7 @@
                                 {% endif %}
                             </p>
 
+                            {% if user.is_superuser %}
                             <div class="card-actions">
                                 <a href="{% url 'main:edit_education' education.pk %}" class="button">Edit</a>
                                 <form method="post" action="{% url 'main:delete_education' education.pk %}" onsubmit="return confirm('Yakin ingin menghapus pengalaman ini?');">
@@ -47,6 +48,7 @@
                                     <button type="submit" class="button button-secondary">Hapus</button>
                                 </form>
                             </div>
+                            {% endif %}
                         </div>
                     </article>
                 {% empty %}

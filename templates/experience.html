@@ -40,6 +40,11 @@
                                 {% endif %}
                             </p>
 
+                            <div class="card-star">
+                                {% include 'components/experience_star.html' %}
+                            </div>
+                            
+                            {% if user.is_superuser %}
                             <div class="card-actions">
                                 <a href="{% url 'main:edit_experience' experience.pk %}" class="button">Edit</a>
                                 <form method="post" action="{% url 'main:delete_experience' experience.pk %}" onsubmit="return confirm('Yakin ingin menghapus pengalaman ini?');">
@@ -47,6 +52,7 @@
                                     <button type="submit" class="button button-secondary">Hapus</button>
                                 </form>
                             </div>
+                            {% endif %}
 
                         </div>
                     </article>
