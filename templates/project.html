@@ -47,8 +47,12 @@
                                 {% if project.project_url %}
                                     <a href="{{ project.project_url }}" target="_blank" class="button">Lihat Project</a>
                                 {% endif %}
+                                
+                                {% if perms.main.change_project %}
+                                    <a href="{% url 'main:edit_project' project.pk %}" class="button">Edit</a>
+                                {% endif %}
+
                                 {% if user.is_superuser %}
-                                <a href="{% url 'main:edit_project' project.pk %}" class="button">Edit</a>
                                 <form method="post" action="{% url 'main:delete_project' project.pk %}" onsubmit="return confirm('Yakin ingin menghapus pengalaman ini?');">
                                     {% csrf_token %}
                                     <button type="submit" class="button button-secondary">Hapus</button>
@@ -99,16 +103,20 @@
                                     <div class="card-star">
                                         {% include 'components/design_star.html' %}
                                     </div>
-                                    {% if design.project_url %}
-                                        <a href="{{ design.project_url }}" target="_blank" class="button">Lihat Project</a>
-                                    {% endif %}
-                                    {% if user.is_superuser %}
-                                    <a href="{% url 'main:edit_design' design.pk %}" class="button">Edit</a>
-                                    <form method="post" action="{% url 'main:delete_design' design.pk %}" onsubmit="return confirm('Yakin ingin menghapus pengalaman ini?');">
-                                        {% csrf_token %}
-                                        <button type="submit" class="button button-secondary">Hapus</button>
-                                    </form>
-                                    {% endif %}
+                                        {% if design.project_url %}
+                                            <a href="{{ design.project_url }}" target="_blank" class="button">Lihat Project</a>
+                                        {% endif %}
+
+                                        {% if perms.main.change_design %}
+                                            <a href="{% url 'main:edit_design' design.pk %}" class="button">Edit</a>
+                                        {% endif %}
+
+                                        {% if user.is_superuser %}
+                                        <form method="post" action="{% url 'main:delete_design' design.pk %}" onsubmit="return confirm('Yakin ingin menghapus pengalaman ini?');">
+                                            {% csrf_token %}
+                                            <button type="submit" class="button button-secondary">Hapus</button>
+                                        </form>
+                                        {% endif %}
                                 </div>
                             </div>
                         </div>

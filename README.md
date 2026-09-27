@@ -57,3 +57,10 @@ Ketika client membuka url, Django akan meneruskan view ke fungsi yang sesuai. Se
 #AI DISCLOSURE
 
 Tugas 3: Dengan ini saya menyatakan menggunakan bantuan Generative AI dengan model Claude (Sonnet 5, Medium Effort) untuk membantu membuat floating button, timeline pada experience, model & views update untuk fitur edit dan delete, serta troubleshooting beberapa kesalahan dalam menulis kode (typo). Penggunaan AI dalam hal ini tetap melewati proses pengecekan lebih lanjut, pemahaman kode, dan dapat dipertanggungjawabkan.
+
+===TUGAS INDIVIDU 4===
+# KREDENSIAL AKUN EDITOR/STAFF DJANGO
+username: adminPorto
+password: tugas_PBP
+
+Note: Kredensial akun staff diberikan untuk kebutuhan penilaian tugas dan fimohon untuk tidak disebarluaskan kepada pihak manapun yang tidak berkaitan/berkepentingan.

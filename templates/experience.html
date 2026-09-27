@@ -43,17 +43,21 @@
                             <div class="card-star">
                                 {% include 'components/experience_star.html' %}
                             </div>
-                            
-                            {% if user.is_superuser %}
+                              
+                                
                             <div class="card-actions">
-                                <a href="{% url 'main:edit_experience' experience.pk %}" class="button">Edit</a>
-                                <form method="post" action="{% url 'main:delete_experience' experience.pk %}" onsubmit="return confirm('Yakin ingin menghapus pengalaman ini?');">
-                                    {% csrf_token %}
-                                    <button type="submit" class="button button-secondary">Hapus</button>
-                                </form>
-                            </div>
-                            {% endif %}
+                                {% if perms.main.change_experience %}
+                                    <a href="{% url 'main:edit_experience' experience.pk %}" class="button">Edit</a>
+                                {% endif %}
 
+                                {% if user.is_superuser %}
+                                    <form method="post" action="{% url 'main:delete_experience' experience.pk %}" onsubmit="return confirm('Yakin ingin menghapus pengalaman ini?');">
+                                        {% csrf_token %}
+                                        <button type="submit" class="button button-secondary">Hapus</button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                            
                         </div>
                     </article>
                 {% empty %}
