@@ -20,6 +20,7 @@ class Experience(models.Model):
     description = models.TextField()
     category = models.CharField(max_length=20, choices=EXPERIENCE_CHOICES, default='full-time')
     thumbnail = models.ImageField(upload_to="thumbnails/", blank=True, null=True)
+    thumbnail_url = models.URLField(blank=True, null=True)
     started_at = models.DateTimeField()
     ended_at = models.DateTimeField(blank=True, null=True)
     starred_by = models.ManyToManyField(
@@ -32,6 +33,15 @@ class Experience(models.Model):
     @property
     def is_ongoing(self):
         return self.ended_at is None
+    
+    @property
+    def thumbnail_display(self):
+        if self.thumbnail:
+            return self.thumbnail
+        if self.thumbnail_url:
+            return self.thumbnail_url
+        return None
+            
     
 #Tugas Individu 2
 class Education(models.Model):
@@ -47,6 +57,7 @@ class Education(models.Model):
     description = models.TextField()
     category = models.CharField(max_length=20, choices=EDUCATION_CHOICES)
     thumbnail = models.ImageField(upload_to="thumbnails/", blank=True, null=True)
+    thumbnail_url = models.URLField(blank=True, null=True)
     started_at = models.DateTimeField()
     ended_at = models.DateTimeField(blank=True, null=True)
     
@@ -56,6 +67,14 @@ class Education(models.Model):
     @property
     def is_ongoing(self):
         return self.ended_at is None
+    
+    @property
+    def thumbnail_display(self):
+        if self.thumbnail:
+            return self.thumbnail
+        if self.thumbnail_url:
+            return self.thumbnail_url
+        return None
     
 #Tugas Individu 3
 class Contact(models.Model):
@@ -77,6 +96,44 @@ class Contact(models.Model):
     
     def __str__(self):
             return self.name
+        
+#Tugas Individu 3
+class Project(models.Model):
+    ROLE_CHOICES = [
+            ('PM', 'Product Manager'),
+            ('PM', 'Project Manager'),
+            ('PS', 'Project Support'),
+            ('Dev', 'Web Developer'),
+            ('Des', 'Designer'),
+        ]
+    
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=255)
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES)
+    description = models.TextField()
+    tech_stack = models.CharField(max_length=255)
+    project_url = models.URLField(blank=True)
+    project_image_url = models.URLField(blank=True, max_length=500)
+
+    def __str__(self):
+        return self.title
+    
+class Design(models.Model):
+    CATEGORY_CHOICES = [
+        ('Personal', 'Personal Project'),
+        ('Group', 'Group Project'),
+    ]
+    
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=255)
+    tools = models.CharField(max_length=255)
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
+    project_url = models.URLField(blank=True)
+    project_image_url = models.URLField(blank=True, max_length=500)
+    
+    starred_by = models.ManyToManyField(
+        User, related_name="starred_design", blank=True
+    )
         
 #Tugas Individu 4
 class Message(models.Model):

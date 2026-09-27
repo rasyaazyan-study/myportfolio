@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     {% block meta %} {% endblock meta %}
 </head>
 
@@ -29,6 +30,7 @@
         <a href="{% url 'main:show_experience' %}">Experience</a>
         <a href="{% url 'main:show_education' %}">Education</a>
         <a href="{% url 'main:show_message' %}">Message</a>
+        <a href="{% url 'main:show_project' %}">Project</a>
         {% if user.is_authenticated %}
             <a href="{% url 'main:show_contact' %}">Contact</a>
             <a class="button button-secondary small" href="{% url 'main:logout' %}">Logout</a>
@@ -45,6 +47,27 @@
         <div class="container">
             <p>&copy; 2026 {{ name }}. Fakultas Ilmu Komputer, Universitas Indonesia.</p>
         </div>
+        <div class="footer-container">
+            <h2>Contact</h2>
+            <div class="footer-icons">
+                <a href="https://github.com/" target="_blank">
+                    <i class="fab fa-github"></i>
+                    <span>rasyaazyan-study</span>
+                </a>
+                <a href="https://id.linkedin.com/in/rasyaazyan" target="_blank">
+                    <i class="fab fa-linkedin"></i>
+                    <span>Rasya Azyan Kautsar</span>
+                </a>
+                <a href="https://instagram.com/rasyaazyan" target="_blank">
+                    <i class="fab fa-instagram"></i>
+                    <span>rasyaazyan</span>
+                </a>
+                <a href="mailto:azyankautsar@gmail.com">
+                    <i class="fas fa-envelope"></i>
+                    <span>azyankautsar@gmail.com</span>
+                </a>
+            </div>
+</div>
     </footer>
 </body>
 

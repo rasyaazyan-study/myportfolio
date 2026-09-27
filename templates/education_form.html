@@ -13,18 +13,68 @@
                       class="education-form">
                     {% csrf_token %}
                     {% for field in form %}
-                        <div class="form-group">
-                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                            {{ field }}
-                            {% for error in field.errors %}
+                        {% if field.name != "thumbnail" and field.name != "thumbnail_url" %}
+                            <div class="form-group">
+                                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {{ field }}
+                                {% for error in field.errors %}
+                                    <p class="form-error">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+
+                    <div class="form-group">
+                        <label for="{{ form.thumbnail.id_for_label }}">{{ form.thumbnail.label }}</label>
+
+                        <div class="thumbnail-toggle">
+                            <input type="radio" id="mode_file" name="thumbnail_mode" value="file"
+                                {% if not form.thumbnail_url.value %}checked{% endif %}
+                                onchange="toggleThumbnailInput()">
+                            <label for="mode_file" class="toggle-btn toggle-btn-file">Upload File</label>
+
+                            <input type="radio" id="mode_url" name="thumbnail_mode" value="url"
+                                {% if form.thumbnail_url.value %}checked{% endif %}
+                                onchange="toggleThumbnailInput()">
+                            <label for="mode_url" class="toggle-btn toggle-btn-url">Masukkan Link</label>
+                        </div>
+
+                        <div id="thumbnail-file-wrapper">
+                            {{ form.thumbnail }}
+                            {% for error in form.thumbnail.errors %}
                                 <p class="form-error">{{ error }}</p>
                             {% endfor %}
                         </div>
-                    {% endfor %}
+
+                        <div id="thumbnail-url-wrapper">
+                            {{ form.thumbnail_url }}
+                            {% for error in form.thumbnail_url.errors %}
+                                <p class="form-error">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+
                     <button type="submit" class="button">Tambah Riwayat Pendidikan</button>
                     <a href="{% url 'main:show_education' %}" class="button button-secondary">Batal</a>
                 </form>
             </div>
         </section>
     </main>
+
+    <script>
+    function toggleThumbnailInput() {
+        const mode = document.querySelector('input[name="thumbnail_mode"]:checked').value;
+        const fileWrapper = document.getElementById('thumbnail-file-wrapper');
+        const urlWrapper = document.getElementById('thumbnail-url-wrapper');
+
+        if (mode === 'file') {
+            fileWrapper.style.display = 'block';
+            urlWrapper.style.display = 'none';
+        } else {
+            fileWrapper.style.display = 'none';
+            urlWrapper.style.display = 'block';
+        }
+    }
+    document.addEventListener('DOMContentLoaded', toggleThumbnailInput);
+    </script>
 {% endblock content %}

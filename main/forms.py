@@ -1,6 +1,6 @@
 from django.forms import ModelForm, TextInput, Textarea, Select, DateTimeInput, URLInput
 
-from main.models import Experience, Education, Contact, Message
+from main.models import Experience, Education, Contact, Message, Project, Design
 
 class ExperienceForm(ModelForm):
     class Meta:
@@ -11,6 +11,7 @@ class ExperienceForm(ModelForm):
             "description",
             "category",
             "thumbnail",
+            "thumbnail_url",
             "started_at",
             "ended_at",
         ]
@@ -21,6 +22,7 @@ class ExperienceForm(ModelForm):
             "description": "Deskripsi Pengalaman",
             "category": "Kategori Pengalaman",
             "thumbnail": "File Foto Berkaitan",
+            "thumbnail_url": "Link Foto Berkaitan",
             "started_at": "Tanggal Mulai",
             "ended_at": "Tanggal Akhir",
         }
@@ -49,6 +51,11 @@ class ExperienceForm(ModelForm):
                     "placeholder": Experience.EXPERIENCE_CHOICES,
                 }
             ),
+            "thumbnail_url": URLInput (
+                attrs={
+                    "placeholder": "https://rasya-azyan.png"
+                }
+            ),
             "started_at": DateTimeInput(
                 attrs={
                     "placeholder": "datetime-local",
@@ -69,6 +76,7 @@ class EducationForm(ModelForm):
             "description",
             "category",
             "thumbnail",
+            "thumbnail_url",
             "started_at",
             "ended_at",
         ]
@@ -78,6 +86,7 @@ class EducationForm(ModelForm):
             "description": "Deskripsi Pengalaman",
             "category": "Jenjang Pendidikan",
             "thumbnail": "File Foto Berkaitan",
+            "thumbnail_url": "Link Foto Berkaitan",
             "started_at": "Tanggal Mulai",
             "ended_at": "Tanggal Akhir",
         }
@@ -98,6 +107,11 @@ class EducationForm(ModelForm):
             "category": Select(
                 choices={
                     "placeholder": Education.EDUCATION_CHOICES,
+                }
+            ),
+            "thumbnail_url": URLInput (
+                attrs={
+                    "placeholder": "https://rasya-azyan.png"
                 }
             ),
             "started_at": DateTimeInput(
@@ -147,6 +161,111 @@ class ContactForm(ModelForm):
                     "placeholder": "https://linkedin.com/in/rasyaazyan"
                 }
             )
+        }
+
+class ProjectForm(ModelForm):
+    class Meta:
+        model = Project
+        fields = [
+            "title",
+            "role",
+            "description",
+            "tech_stack",
+            "project_url",
+            "project_image_url",
+        ]
+
+        labels = {
+            "title": "Nama Proyek",
+            "role": "Peran Saya",
+            "description": "Deskripsi Proyek",
+            "tech_stack": "Teknologi yang Digunakan",
+            "project_url": "URL Proyek",
+            "project_image_url": "URL Gambar Proyek",
+        }
+
+        widgets = {
+            "title": TextInput(
+                attrs={
+                    "placeholder": "Portfolio Website",
+                    "maxlength": 255,
+                }
+            ),
+            "role": Select(
+                choices={
+                    "placeholder": Project.ROLE_CHOICES,
+                }
+            ),
+            "description": Textarea(
+                attrs={
+                    "placeholder": "Ceritakan Proyekmu",
+                    "rows": 3,
+                }
+            ),
+            "tech_stack": TextInput(
+                attrs={
+                    "placeholder": "Django, Python, HTML, CSS",
+                }
+            ),
+            "project_url": URLInput(
+                attrs={
+                    "placeholder": "https://github.com/rasyaazyan/pacilisthebest",
+                }
+            ),
+            "project_image_url": URLInput(
+                attrs={
+                    "placeholder": "https://drive.google.com/thumbnail?id=...&sz=w1000",
+                }
+            ),
+        }
+        
+class DesignForm(ModelForm):
+    class Meta:
+        model = Design
+        fields = [
+            'title',
+            'tools',
+            'category',
+            'project_url',
+            'project_image_url'
+        ]
+        
+        labels = {
+            "title": "Nama Desain",
+            "tools": "Alat yang Digunakan",
+            "category": "Jenis Pekerjaan",
+            "project_url": "URL Proyek",
+            "project_image_url": "URL Gambar Proyek",
+        }
+        
+        widgets = {
+            "title": TextInput(
+                attrs={
+                    "placeholder": "Nama Desain",
+                    "maxlength": 255,
+                }
+            ),
+            "tools": TextInput(
+                attrs={
+                    "placeholder": "Software Yang Digunakan",
+                    "maxlength": 255,
+                }
+            ),
+            "category": Select(
+                choices={
+                    "placeholder": Design.CATEGORY_CHOICES,
+                }
+            ),
+            "design_url": URLInput(
+                attrs={
+                    "placeholder": "https://drive.google.com/thumbnail?id=...&sz=w1000",
+                }
+            ),
+            "design_image_url": URLInput(
+                attrs={
+                    "placeholder": "https://drive.google.com/thumbnail?id=...&sz=w1000",
+                }
+            ),
         }
         
 class MessageForm(ModelForm):

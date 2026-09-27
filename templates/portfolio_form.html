@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block meta %}
+    <title>{{ page_title }} - {{ name }}</title>
+{% endblock meta %}
+{% block content %}
+    <main>
+        <section class="experience-section">
+            <div class="container">
+                <h1> {{ page_title }} </h1>
+
+                <div class="portfolio-toggle">
+                    <input type="radio" id="mode_project" name="portfolio_mode" value="project"
+                        {% if item_type == "project" %}checked{% endif %}
+                        onchange="switchPortfolioMode()">
+                    <label for="mode_project" class="toggle-btn toggle-btn-project">Project</label>
+
+                    <input type="radio" id="mode_design" name="portfolio_mode" value="design"
+                        {% if item_type == "design" %}checked{% endif %}
+                        onchange="switchPortfolioMode()">
+                    <label for="mode_design" class="toggle-btn toggle-btn-design">Design</label>
+                </div>
+
+                <form method="post"
+                      action=""
+                      class="project-form">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="form-group">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            {% for error in field.errors %}
+                                <p class="form-error">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                    <button type="submit" class="button">Tambah Project</button>
+                    <a href="{% url 'main:show_project' %}" class="button button-secondary">Batal</a>
+                </form>
+            </div>
+        </section>
+    </main>
+
+
+    <script>
+    function switchPortfolioMode() {
+        const mode = document.querySelector('input[name="portfolio_mode"]:checked').value;
+        const currentType = "{{ item_type }}";
+
+        if (mode === 'project' && currentType !== 'project') {
+            window.location.href = "{% url 'main:create_project' %}";
+        } else if (mode === 'design' && currentType !== 'design') {
+            window.location.href = "{% url 'main:create_design' %}";
+        }
+    }
+    </script>
+{% endblock content %}

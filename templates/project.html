@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% block meta %}
+    <title>{{ name }} - Portofolio</title>
+{% endblock meta %}
+
+{% block content %}
+
+    <main>
+    <section class="project-section" id="project">
+        <div class="container">
+            <p class="section-kicker">Beberapa IT Project yang pernah saya kerjakan</p>
+            <h1>Previous <span class="highlights">Project</span></h1>
+
+            <div class="content-button">
+                <a href="{% url create_url_name %}" class="add-button floating">+ Add project</a>
+            </div>
+            <a href="{% url create_url_name %}" class="add-button mobile">+</a>
+
+            <div class="project-grid">
+                {% for project in project_list %}
+                    <article class="project-card">
+                        {% if project.project_image_url %}
+                            <img src="{{ project.project_image_url }}" alt="{{ project.title }}">
+                        {% endif %}
+                        <div class = "education-content">
+
+                            <span class="project-role">
+                                {{ project.get_role_display }}
+                            </span>
+
+                            <h4 class="project-title">
+                                {{ project.title }}
+                            </h4>
+
+                            <p class="project-stack">
+                                {{ project.stack }}
+                            </p>
+
+                            <p class="project-description">
+                                {{ project.description }}
+                            </p>
+
+                            <div class="card-actions">
+                                <div class="card-star">
+                                    {% include 'components/project_star.html' %}
+                                </div>
+                                {% if project.project_url %}
+                                    <a href="{{ project.project_url }}" target="_blank" class="button">Lihat Project</a>
+                                {% endif %}
+                                {% if user.is_superuser %}
+                                <a href="{% url 'main:edit_project' project.pk %}" class="button">Edit</a>
+                                <form method="post" action="{% url 'main:delete_project' project.pk %}" onsubmit="return confirm('Yakin ingin menghapus pengalaman ini?');">
+                                    {% csrf_token %}
+                                    <button type="submit" class="button button-secondary">Hapus</button>
+                                </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </article>
+                {% empty %}
+                    <p class="empty-state">
+                        Belum ada pengalaman yang ditambahkan.
+                    </p>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <section class="design-section">
+        <div class="container">
+            <p class="section-kicker">Beberapa Visual Project yang pernah saya kerjakan</p>
+            <h1>Previous <span class="highlights">Design Portfolio</span></h1>
+
+            <div class="design-grid">
+                {% for design in design_list %}
+                    <article class="design-card" tabindex="0">
+                        <div class="design-card-inner">
+
+                            <div class="design-card-front">
+                                {% if design.project_image_url %}
+                                    <img src="{{ design.project_image_url }}" alt="{{ design.title }}">
+                                {% endif %}
+                            </div>
+
+                            <div class = "design-card-back">
+                                <span class="design-category">
+                                    {{ design.get_category_display }}
+                                </span>
+
+                                <h4 class="design-title">
+                                    {{ design.title }}
+                                </h4>
+
+                                <p class="design-tools">
+                                    {{ design.tools }}
+                                </p>
+
+                                <div class="card-actions">
+                                    <div class="card-star">
+                                        {% include 'components/design_star.html' %}
+                                    </div>
+                                    {% if design.project_url %}
+                                        <a href="{{ design.project_url }}" target="_blank" class="button">Lihat Project</a>
+                                    {% endif %}
+                                    {% if user.is_superuser %}
+                                    <a href="{% url 'main:edit_design' design.pk %}" class="button">Edit</a>
+                                    <form method="post" action="{% url 'main:delete_design' design.pk %}" onsubmit="return confirm('Yakin ingin menghapus pengalaman ini?');">
+                                        {% csrf_token %}
+                                        <button type="submit" class="button button-secondary">Hapus</button>
+                                    </form>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                {% empty %}
+                    <p class="empty-state">
+                        Belum ada pengalaman yang ditambahkan.
+                    </p>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    </main>
+{% endblock content %}

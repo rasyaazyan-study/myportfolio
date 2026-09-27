@@ -1,15 +1,9 @@
 # Create your views here.
 from django.shortcuts import render
 
-from main.models import Experience
-from main.models import Education
-from main.models import Contact
-from main.models import Message
+from main.models import Experience, Education, Contact, Message, Project, Design
 
-from main.forms import ExperienceForm
-from main.forms import EducationForm
-from main.forms import ContactForm
-from main.forms import MessageForm
+from main.forms import ExperienceForm, EducationForm, ContactForm, MessageForm, ProjectForm, DesignForm
 
 from django.contrib import messages
 from django.core import serializers
@@ -21,8 +15,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.shortcuts import redirect, render
 
-from django.contrib.auth.decorators import login_required
-from django.core.exceptions import PermissionDenied
+from django.contrib.auth.decorators import login_required, permission_required
 
 import datetime
 
@@ -91,10 +84,8 @@ def show_experience(request):
     return render(request, "experience.html", context)
 
 @login_required(login_url="/login/")
+@permission_required('main.add_experience', raise_exception=True)
 def create_experience(request):
-    if not request.user.is_superuser:
-        raise PermissionDenied
-    
     form = ExperienceForm(request.POST or None, request.FILES or None)
 
     if request.method == "POST" and form.is_valid():
@@ -109,10 +100,8 @@ def create_experience(request):
     return render(request, "experience_form.html", context)
 
 @login_required(login_url="/login/")
+@permission_required('main.change_experience', raise_exception=True)
 def edit_experience(request, id):
-    if not request.user.is_superuser:
-        raise PermissionDenied
-    
     experience = get_object_or_404(Experience, pk=id)
     form = ExperienceForm(request.POST or None, request.FILES or None, instance=experience)
     
@@ -128,10 +117,8 @@ def edit_experience(request, id):
     return render(request, "experience_form.html", context)
 
 @login_required(login_url="/login/")
+@permission_required('main.delete_experience', raise_exception=True)
 def delete_experience(request, id):
-    if not request.user.is_superuser:
-        raise PermissionDenied
-    
     experience = get_object_or_404(Experience, pk=id)
     
     if request.method == "POST":
@@ -152,6 +139,18 @@ def toggle_star_experience(request, id):
 
     return redirect("main:show_experience")
 
+@login_required
+@permission_required('main.view_experience', raise_exception=True)
+def get_experiences_json(request):    
+    title_query = request.GET.get("title", "").strip()
+    experiences = Experience.objects.all()
+
+    if title_query:
+        experiences = experiences.filter(title__icontains=title_query)
+
+    experiences_json = serializers.serialize("json", experiences)
+    return HttpResponse(experiences_json, content_type="application/json")
+
 #=== Education ===
 
 def show_education(request):
@@ -163,10 +162,8 @@ def show_education(request):
     return render(request, "education.html", context)
 
 @login_required(login_url="/login/")
-def create_education(request):
-    if not request.user.is_superuser:
-        raise PermissionDenied
-    
+@permission_required('main.add_education', raise_exception=True)
+def create_education(request):    
     form = EducationForm(request.POST or None, request.FILES or None)
 
     if request.method == "POST" and form.is_valid():
@@ -181,10 +178,8 @@ def create_education(request):
     return render(request, "education_form.html", context)
 
 @login_required(login_url="/login/")
-def edit_education(request, id):
-    if not request.user.is_superuser:
-        raise PermissionDenied
-    
+@permission_required('main.change_education', raise_exception=True)
+def edit_education(request, id):    
     education = get_object_or_404(Education, pk=id)
     form = EducationForm(request.POST or None, request.FILES or None, instance=education)
     
@@ -200,16 +195,27 @@ def edit_education(request, id):
     return render(request, "education_form.html", context)
 
 @login_required(login_url="/login/")
+@permission_required('main.delete_education', raise_exception=True)
 def delete_education(request, id):
-    if not request.user.is_superuser:
-        raise PermissionDenied
-    
     education = get_object_or_404(Education, pk=id)
     
     if request.method == "POST":
         education.delete()
         messages.success(request, "Riwayat Pendidikan telah terhapus!")
-        return redirect("main:show_education")
+    
+    return redirect("main:show_education")
+    
+@login_required
+@permission_required('main.view_education', raise_exception=True)
+def get_educations_json(request):    
+    category_query = request.GET.get("category", "").strip()
+    educations = Education.objects.all()
+
+    if category_query:
+        educations = educations.filter(category__icontains=category_query)
+
+    educations_json = serializers.serialize("json", educations)
+    return HttpResponse(educations_json, content_type="application/json")
     
 #=== Contact ===
 
@@ -222,11 +228,9 @@ def show_contact(request):
     }
     return render(request, "contact.html", context)
 
-@login_required(login_url="/login/")    
+@login_required(login_url="/login/") 
+@permission_required('main.add_contact', raise_exception=True)   
 def create_contact(request):
-    if not request.user.is_superuser:
-        raise PermissionDenied
-    
     form = ContactForm(request.POST or None)
 
     if request.method == "POST" and form.is_valid():
@@ -238,10 +242,8 @@ def create_contact(request):
     return render(request, "contact_form.html", context)
 
 @login_required(login_url="/login/")
+@permission_required('main.change_contact', raise_exception=True)   
 def edit_contact(request, id):
-    if not request.user.is_superuser:
-        raise PermissionDenied
-    
     contact = get_object_or_404(Contact, pk=id)
     form = ContactForm(request.POST or None, instance=contact)
 
@@ -257,10 +259,8 @@ def edit_contact(request, id):
     return render(request, "contact_form.html", context)
 
 @login_required(login_url="/login/")
+@permission_required('main.delete_contact', raise_exception=True)  
 def delete_contact(request, id):
-    if not request.user.is_superuser:
-        raise PermissionDenied
-    
     contact = get_object_or_404(Contact, pk=id)
 
     if request.method == "POST":
@@ -268,6 +268,13 @@ def delete_contact(request, id):
         messages.success(request, "Kontak telah terhapus!")
 
     return redirect("main:show_contact")
+
+@login_required
+@permission_required('main.view_contact', raise_exception=True)  
+def get_contacts_json(request):
+    contacts = Contact.objects.all()
+    contacts_json = serializers.serialize("json", contacts)
+    return HttpResponse(contacts_json, content_type="application/json")
 
 #=== Message ===
 
@@ -308,3 +315,160 @@ def toggle_star_message(request, id):
             message.starred_by.add(request.user)
 
     return redirect("main:show_message")
+
+@login_required
+@permission_required('main.view_message', raise_exception=True) 
+def get_messages_json(request):
+    messages_qs = Message.objects.all()
+    messages_json = serializers.serialize("json", messages_qs)
+    return HttpResponse(messages_json, content_type="application/json")
+
+#=== Project===
+def show_project(request):
+    context = {
+        "name": "Rasya Azyan Kautsar",
+        "project_list": Project.objects.all(),
+        "design_list": Design.objects.all(),
+        "create_url_name": "main:create_project",
+    }
+    return render(request, "project.html", context)
+
+@login_required(login_url="/login/") 
+@permission_required('main.add_project', raise_exception=True)  
+def create_project(request):
+    form = ProjectForm(request.POST or None)
+
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "Proyek baru berhasil ditambahkan!")
+        return redirect("main:show_project")
+
+    context = {
+        "name": "Rasya Azyan Kautsar",
+        "form": form,
+        "item_type": "project",
+        "page_title": "Add New Project",
+    }
+    return render(request, "portfolio_form.html", context)
+
+@login_required(login_url="/login/")
+@permission_required('main.change_project', raise_exception=True) 
+def edit_project(request, id):
+    project = get_object_or_404(Project, pk=id)
+    form = ProjectForm(request.POST or None, instance=project)
+
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "Project berhasil diperbarui!")
+        return redirect("main:show_project")
+
+    context = {
+        "name": "Rasya Azyan Kautsar",
+        "form": form,
+    }
+    return render(request, "portfolio_form.html", context)
+
+@login_required(login_url="/login/")
+@permission_required('main.delete_project', raise_exception=True) 
+def delete_project(request, id):
+    project = get_object_or_404(Project, pk=id)
+    
+    if request.method == "POST":
+        project.delete()
+        messages.success(request, "Project telah terhapus!")
+    
+    return redirect("main:show_project")
+    
+@login_required(login_url="/login/")
+def toggle_star_project(request, id):
+    project = get_object_or_404(Project, pk=id)
+
+    if request.method == "POST":
+        if request.user in project.starred_by.all():
+            project.starred_by.remove(request.user)
+        else:
+            project.starred_by.add(request.user)
+
+    return redirect("main:show_project")
+
+@login_required
+@permission_required('main.view_project', raise_exception=True) 
+def get_projects_json(request):
+    title_query = request.GET.get("title", "").strip()
+    projects = Project.objects.all()
+
+    if title_query:
+        projects = projects.filter(title__icontains=title_query)
+
+    projects_json = serializers.serialize("json", projects)
+    return HttpResponse(projects_json, content_type="application/json")
+
+@login_required(login_url="/login/")  
+@permission_required('main.add_design', raise_exception=True) 
+def create_design(request):
+    form = DesignForm(request.POST or None)
+
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "Design baru berhasil ditambahkan!")
+        return redirect("main:show_project")
+
+    context = {
+        "name": "Rasya Azyan Kautsar",
+        "form": form,
+        "item_type": "design",
+        "page_title": "Add New Design",
+    }
+    return render(request, "portfolio_form.html", context)
+
+@login_required(login_url="/login/")
+@permission_required('main.change_design', raise_exception=True) 
+def edit_design(request, id):
+    design = get_object_or_404(Design, pk=id)
+    form = DesignForm(request.POST or None, instance=design)
+
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "Design berhasil diperbarui!")
+        return redirect("main:show_project")
+
+    context = {
+        "name": "Rasya Azyan Kautsar",
+        "form": form,
+    }
+    return render(request, "portfolio_form.html", context)
+
+@login_required(login_url="/login/")
+@permission_required('main.delete_design', raise_exception=True) 
+def delete_design(request, id):
+    design = get_object_or_404(Design, pk=id)
+    
+    if request.method == "POST":
+        design.delete()
+        messages.success(request, "Design telah terhapus!")
+    
+    return redirect("main:show_project")
+    
+@login_required(login_url="/login/")
+def toggle_star_design(request, id):
+    design = get_object_or_404(Design, pk=id)
+
+    if request.method == "POST":
+        if request.user in design.starred_by.all():
+            design.starred_by.remove(request.user)
+        else:
+            design.starred_by.add(request.user)
+
+    return redirect("main:show_project")
+
+@login_required
+@permission_required('main.view_design', raise_exception=True) 
+def get_designs_json(request):
+    title_query = request.GET.get("title", "").strip()
+    designs = Design.objects.all()
+
+    if title_query:
+        designs = designs.filter(title__icontains=title_query)
+
+    designs_json = serializers.serialize("json", designs)
+    return HttpResponse(designs_json, content_type="application/json")
