@@ -10,10 +10,12 @@
             <p class="section-kicker">Perjalanan saya sejauh ini</p>
             <h1><span class="highlights">Organizational</span> Experience</h1>
 
-            <div class="content-button">
-                <a href="{% url create_url_name %}" class="add-button floating">+ Add Experience</a>
-            </div>
-            <a href="{% url create_url_name %}" class="add-button mobile">+</a>
+            {% if user.is_superuser %}
+                <div class="content-button">
+                    <a href="{% url create_url_name %}" class="add-button floating">+ Add Experience</a>
+                </div>
+                <a href="{% url create_url_name %}" class="add-button mobile">+</a>
+            {% endif %}
 
             <div class="experience-grid">
                 {% for experience in experience_list %}
