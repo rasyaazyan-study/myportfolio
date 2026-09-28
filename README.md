@@ -64,3 +64,7 @@ username: adminPorto
 password: tugas_PBP
 
 Note: Kredensial akun staff diberikan untuk kebutuhan penilaian tugas dan fimohon untuk tidak disebarluaskan kepada pihak manapun yang tidak berkaitan/berkepentingan.
+
+#AI DISCLOSURE
+
+Tugas 4: Dengan ini saya menyatakan menggunakan bantuan Generative AI dengan model Claude (Sonnet 5, Medium Effort) untuk membantu membuat Flip Card pada halaman Project, toggle pada form project, dan Troubleshooting saat pembuatan model, form, dan views untuk Project. Penggunaan AI dalam hal ini tetap melewati proses pengecekan lebih lanjut, pemahaman kode, dan dapat dipertanggungjawabkan. 

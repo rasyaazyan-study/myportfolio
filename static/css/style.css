@@ -1416,6 +1416,7 @@ h1, .brand {
 
     .site-header .container {
         position: relative;
+        max-width: 80%;
     }
 
     .hamburger-button {
