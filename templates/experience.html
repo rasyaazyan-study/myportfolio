@@ -22,6 +22,8 @@
                     <article class="experience-card">
                         {% if experience.thumbnail %}
                             <img src="{{ experience.thumbnail.url }}" alt="{{ experience.organization }}">
+                        {% elif education.thumbnail_url %}
+                            <img src="{{ experience.thumbnail_url }}" alt="{{ experience.organization }}">
                         {% endif %}
                         <div class = "experience-content">
                             <span class="experience-category">

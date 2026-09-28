@@ -23,6 +23,8 @@
                     <article class="education-card">
                         {% if education.thumbnail %}
                             <img src="{{ education.thumbnail.url }}" alt="{{ education.institution }}">
+                        {% elif education.thumbnail_url %}
+                            <img src="{{ education.thumbnail_url }}" alt="{{ education.institution }}">
                         {% endif %}
                         <div class = "education-content">
                             <span class="education-category">
