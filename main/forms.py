@@ -68,6 +68,14 @@ class ExperienceForm(ModelForm):
             ),
         }
         
+    def clean(self):
+        cleaned = super().clean()
+        if self.files.get("thumbnail"):
+            cleaned["thumbnail_url"] = None
+        elif cleaned.get("thumbnail_url"):
+            cleaned["thumbnail"] = False
+        return cleaned
+        
 class EducationForm(ModelForm):
     class Meta:
         model = Education
@@ -125,6 +133,14 @@ class EducationForm(ModelForm):
                 }
             ),
         }
+        
+    def clean(self):
+        cleaned = super().clean()
+        if self.files.get("thumbnail"):
+            cleaned["thumbnail_url"] = None
+        elif cleaned.get("thumbnail_url"):
+            cleaned["thumbnail"] = False
+        return cleaned
         
 class ContactForm(ModelForm):
     class Meta:

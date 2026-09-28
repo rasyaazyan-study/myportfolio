@@ -21,10 +21,10 @@
             <div class="education-grid">
                 {% for education in education_list %}
                     <article class="education-card">
-                        {% if education.thumbnail %}
-                            <img src="{{ education.thumbnail.url }}" alt="{{ education.institution }}">
-                        {% elif education.thumbnail_url %}
+                        {% if education.thumbnail_url %}
                             <img src="{{ education.thumbnail_url }}" alt="{{ education.institution }}">
+                        {% elif education.thumbnail %}
+                            <img src="{{ education.thumbnail.url }}" alt="{{ education.institution }}">
                         {% endif %}
                         <div class = "education-content">
                             <span class="education-category">

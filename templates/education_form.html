@@ -73,6 +73,8 @@
         } else {
             fileWrapper.style.display = 'none';
             urlWrapper.style.display = 'block';
+            const f = fileWrapper.querySelector('input[type="file"]');
+            if (f) f.value = '';
         }
     }
     document.addEventListener('DOMContentLoaded', toggleThumbnailInput);
