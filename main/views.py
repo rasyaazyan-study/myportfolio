@@ -16,6 +16,7 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.shortcuts import redirect, render
 
 from django.contrib.auth.decorators import login_required, permission_required
+from django.db.models import F
 
 import datetime
 
@@ -78,7 +79,7 @@ def show_main(request):
 def show_experience(request):
     context = {
         "name": "Rasya Azyan Kautsar",
-        "experience_list": Experience.objects.all(),
+        "experience_list": Experience.objects.order_by(F("ended_at").desc(nulls_first=True), "-started_at"),
         "create_url_name": "main:create_experience",
     }
     return render(request, "experience.html", context)
@@ -156,7 +157,7 @@ def get_experiences_json(request):
 def show_education(request):
     context = {
         "name": "Rasya Azyan Kautsar",
-        "education_list": Education.objects.all(),
+        "education_list": Education.objects.order_by(F("ended_at").desc(nulls_first=True), "-started_at"),
         "create_url_name": "main:create_education",
     }
     return render(request, "education.html", context)
