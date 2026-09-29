@@ -114,6 +114,7 @@ class Project(models.Model):
     tech_stack = models.CharField(max_length=255)
     project_url = models.URLField(blank=True)
     project_image_url = models.URLField(blank=True, max_length=500)
+    starred_by = models.ManyToManyField(User, related_name="starred_project", blank=True)
 
     def __str__(self):
         return self.title
@@ -130,10 +131,7 @@ class Design(models.Model):
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
     project_url = models.URLField(blank=True)
     project_image_url = models.URLField(blank=True, max_length=500)
-    
-    starred_by = models.ManyToManyField(
-        User, related_name="starred_design", blank=True
-    )
+    starred_by = models.ManyToManyField(User, related_name="starred_design", blank=True)
         
 #Tugas Individu 4
 class Message(models.Model):
