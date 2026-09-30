@@ -44,7 +44,7 @@
 
                             <div class="card-actions">
                                 <div class="card-star">
-                                    {% include 'components/project_star.html' %}
+                                    {% include 'components/star_button.html' with obj=project url_name='main:toggle_star_project' %}
                                 </div>
                                 
                                 {% if project.project_url %}
@@ -104,7 +104,7 @@
 
                                 <div class="card-actions">
                                     <div class="card-star">
-                                        {% include 'components/design_star.html' %}
+                                        {% include 'components/star_button.html' with obj=design url_name='main:toggle_star_design' %}
                                     </div>
                                         {% if design.project_url %}
                                             <a href="{{ design.project_url }}" target="_blank" class="button">Lihat Project</a>

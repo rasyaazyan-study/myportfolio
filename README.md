@@ -2,6 +2,11 @@ Nama: Rasya Azyan Kautsar
 NPM: 2506538981
 Kelas: PBP C
 
+===TUTORIAL===
+1. Tutorial 3
+Note: perubahan kali ini saya implementasikan pada halaman Education dengan alasan untuk meminimalisir potensi kerusakan kode, kecuali untuk fitur Toast.
+
+===TUGAS INDIVIDU===
 #PERTANYAAN REFLEKTIF
 1. Pada Tutorial dan Tugas 1, Anda diberi kebebasan untuk menentukan tampilan dari website portofolio Anda. Saat Anda merancang struktur HTML yang digunakan, apakah Anda menggunakan elemen semantik HTML5 seperti <section>, <article>, atau <aside>? Jika iya, bagaimana elemen tersebut membantu Anda dalam membuat static web? Jika tidak, mengapa tanpa elemen tersebut sudah memenuhi kebutuhan desain Anda?
 

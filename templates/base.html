@@ -67,8 +67,28 @@
                     <span>azyankautsar@gmail.com</span>
                 </a>
             </div>
-</div>
+        </div>
     </footer>
+    {% include 'components/toast.html' %}
+
+    {% if messages %}
+    <div id="django-messages" hidden>
+        {% for message in messages %}
+            <span data-level="{{ message.level_tag }}" data-text="{{ message }}"></span>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const titles = { success: 'Berhasil', error: 'Gagal' };
+
+        document.querySelectorAll('#django-messages span').forEach(function (el) {
+            const level = el.dataset.level;
+            showToast(titles[level] || 'Informasi', el.dataset.text, level);
+        });
+    });
+    </script>
 </body>
 
 </html>

@@ -37,7 +37,7 @@
                         <p class="message-date">{{ message.created_at|date:"d M Y, H:i" }}</p>
 
                         <div class="card-star">
-                            {% include 'components/message_star.html' %}
+                            {% include 'components/star_button.html' with obj=message url_name='main:toggle_star_message' %}
                         </div>
                         
                         <div class="card-actions">

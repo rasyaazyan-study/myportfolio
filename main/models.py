@@ -46,11 +46,11 @@ class Experience(models.Model):
 #Tugas Individu 2
 class Education(models.Model):
     EDUCATION_CHOICES = [
-        ('SD', 'Sekolah Dasar'),
-        ('SMP', 'Sekolah Menengah Pertama'),
-        ('SMA', 'Sekolah Menengah Atas'),
-        ('S1', 'Program Sarjana')
-    ]
+            ('SD', 'Sekolah Dasar'),
+            ('SMP', 'Sekolah Menengah Pertama'),
+            ('SMA', 'Sekolah Menengah Atas'),
+            ('S1', 'Program Sarjana')
+        ]
     
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     institution = models.CharField(max_length=255, blank=True, null=True)

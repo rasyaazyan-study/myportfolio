@@ -18,6 +18,10 @@ from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required, permission_required
 from django.db.models import F
 
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from django.http import Http404
+
 import datetime
 
 #=== Login & Register ===
@@ -128,36 +132,68 @@ def delete_experience(request, id):
         
     return redirect("main:show_experience")
 
-@login_required(login_url="/login/")
-def toggle_star_experience(request, id):
-    experience = get_object_or_404(Experience, pk=id)
-
-    if request.method == "POST":
-        if request.user in experience.starred_by.all():
-            experience.starred_by.remove(request.user)
-        else:
-            experience.starred_by.add(request.user)
-
-    return redirect("main:show_experience")
-
 @login_required
 @permission_required('main.view_experience', raise_exception=True)
-def get_experiences_json(request):    
+def get_experiences_json(request):
     title_query = request.GET.get("title", "").strip()
-    experiences = Experience.objects.all()
+    experiences = Experience.objects.prefetch_related("starred_by").all()
 
     if title_query:
         experiences = experiences.filter(title__icontains=title_query)
 
-    experiences_json = serializers.serialize("json", experiences)
-    return HttpResponse(experiences_json, content_type="application/json")
+    data = []
+    for exp in experiences:
+        starred_users = list(exp.starred_by.all())
+        starred_ids = {u.pk for u in starred_users}
+        
+        if exp.thumbnail:
+            thumbnail = exp.thumbnail.url
+        elif exp.thumbnail_url:
+            thumbnail = exp.thumbnail_url
+        else:
+            thumbnail = None
+
+        data.append({
+            "pk": str(exp.id),
+            "fields": {
+                "title": exp.title,
+                "organization": exp.organization,
+                "description": exp.description,
+                "category": exp.category,
+                "category_display": exp.get_category_display(),
+                "thumbnail": thumbnail,
+                "started_at": exp.started_at.isoformat(),
+                "ended_at": exp.ended_at.isoformat() if exp.ended_at else None,
+                "is_ongoing": exp.is_ongoing,
+                "star_count": len(starred_users),
+                "is_starred": request.user.is_authenticated and request.user.pk in starred_ids,
+                "starred_by_names": ", ".join(u.username for u in starred_users),
+            },
+        })
+
+    return JsonResponse(data, safe=False)
+
+@login_required(login_url="/login/")
+@require_POST
+def toggle_star_experience(request, id):
+    experience = get_object_or_404(Experience, pk=id)
+
+    if experience.starred_by.filter(pk=request.user.pk).exists():
+        experience.starred_by.remove(request.user)
+        messages.success(request, f"Star dihapus dari \"{experience.title}\".")
+    else:
+        experience.starred_by.add(request.user)
+        messages.success(request, f"Star diberikan untuk \"{experience.title}\"!")
+
+    return redirect("main:show_experience")
 
 #=== Education ===
 
 def show_education(request):
     context = {
         "name": "Rasya Azyan Kautsar",
-        "education_list": Education.objects.order_by(F("ended_at").desc(nulls_first=True), "-started_at"),
+        "education_form": EducationForm(),
+        "institution_query": request.GET.get("institution", "").strip(),
         "create_url_name": "main:create_education",
     }
     return render(request, "education.html", context)
@@ -206,17 +242,55 @@ def delete_education(request, id):
     
     return redirect("main:show_education")
     
-@login_required
-@permission_required('main.view_education', raise_exception=True)
-def get_educations_json(request):    
-    category_query = request.GET.get("category", "").strip()
-    educations = Education.objects.all()
+def get_educations_json(request):
+    institution_query = request.GET.get("institution", "").strip()
+    educations = Education.objects.order_by(F("ended_at").desc(nulls_first=True), "-started_at")
 
-    if category_query:
-        educations = educations.filter(category__icontains=category_query)
+    if institution_query:
+        educations = educations.filter(institution__icontains=institution_query)
 
-    educations_json = serializers.serialize("json", educations)
-    return HttpResponse(educations_json, content_type="application/json")
+    data = []
+    for edu in educations:
+        if edu.thumbnail:
+            thumbnail = edu.thumbnail.url
+        elif edu.thumbnail_url:
+            thumbnail = edu.thumbnail_url
+        else:
+            thumbnail = None
+
+        data.append({
+            "pk": str(edu.id),
+            "fields": {
+                "institution": edu.institution,
+                "description": edu.description,
+                "category": edu.category,
+                "category_display": edu.get_category_display(),
+                "thumbnail": thumbnail,
+                "started_at": edu.started_at.isoformat(),
+                "ended_at": edu.ended_at.isoformat() if edu.ended_at else None,
+                "is_ongoing": edu.is_ongoing,
+            },
+        })
+
+    return JsonResponse(data, safe=False)
+
+@require_POST
+def create_education_ajax(request):
+    if not request.user.is_superuser:
+        return JsonResponse(
+            {"message": "Hanya pemilik portofolio yang dapat menambahkan pendidikan."},
+            status=403,
+        )
+
+    form = EducationForm(request.POST, request.FILES)
+    if form.is_valid():
+        education = form.save()
+        return JsonResponse(
+            {"message": "Pendidikan berhasil ditambahkan.", "pk": str(education.pk)},
+            status=201,
+        )
+
+    return JsonResponse({"errors": form.errors.get_json_data()}, status=400)
     
 #=== Contact ===
 
@@ -274,8 +348,22 @@ def delete_contact(request, id):
 @permission_required('main.view_contact', raise_exception=True)  
 def get_contacts_json(request):
     contacts = Contact.objects.all()
-    contacts_json = serializers.serialize("json", contacts)
-    return HttpResponse(contacts_json, content_type="application/json")
+
+    data = [
+        {
+            "pk": str(contact.id),
+            "fields": {
+                "name": contact.name,
+                "category": contact.category,
+                "category_display": contact.get_category_display(),
+                "value": contact.value,
+                "url": contact.url,
+            },
+        }
+        for contact in contacts
+    ]
+
+    return JsonResponse(data, safe=False)
 
 #=== Message ===
 
@@ -305,24 +393,44 @@ def delete_message(request, id):
 
     return redirect("main:show_message")
 
-@login_required(login_url="/login/")
-def toggle_star_message(request, id):
-    message = get_object_or_404(Message, pk=id)
-
-    if request.method == "POST":
-        if request.user in message.starred_by.all():
-            message.starred_by.remove(request.user)
-        else:
-            message.starred_by.add(request.user)
-
-    return redirect("main:show_message")
-
 @login_required
 @permission_required('main.view_message', raise_exception=True) 
 def get_messages_json(request):
-    messages_qs = Message.objects.all()
-    messages_json = serializers.serialize("json", messages_qs)
-    return HttpResponse(messages_json, content_type="application/json")
+    messages_qs = Message.objects.prefetch_related("starred_by").all()
+
+    data = []
+    for message in messages_qs:
+        starred_users = list(message.starred_by.all())
+        starred_ids = {u.pk for u in starred_users}
+
+        data.append({
+            "pk": str(message.id),
+            "fields": {
+                "created_at": message.created_at.isoformat(),
+                "sender": message.sender,
+                "to": message.to,
+                "value": message.value,
+                "star_count": len(starred_users),
+                "is_starred": request.user.is_authenticated and request.user.pk in starred_ids,
+                "starred_by_names": ", ".join(u.username for u in starred_users),
+            },
+        })
+
+    return JsonResponse(data, safe=False)
+
+@login_required(login_url="/login/")
+@require_POST
+def toggle_star_message(request, id):
+    message = get_object_or_404(Message, pk=id)
+
+    if message.starred_by.filter(pk=request.user.pk).exists():
+        message.starred_by.remove(request.user)
+        messages.success(request, f"Star dihapus dari pesan.")
+    else:
+        message.starred_by.add(request.user)
+        messages.success(request, f"Star diberikan untuk pesan.")
+
+    return redirect("main:show_message")
 
 #=== Project===
 def show_project(request):
@@ -330,19 +438,24 @@ def show_project(request):
         "name": "Rasya Azyan Kautsar",
         "project_list": Project.objects.all(),
         "design_list": Design.objects.all(),
+        "project_form": ProjectForm(),
+        "design_form": DesignForm(),
         "create_url_name": "main:create_project",
     }
     return render(request, "project.html", context)
 
-@login_required(login_url="/login/") 
-@permission_required('main.add_project', raise_exception=True)  
+@login_required(login_url="/login/")
+@permission_required('main.add_project', raise_exception=True)
 def create_project(request):
-    form = ProjectForm(request.POST or None)
-
-    if request.method == "POST" and form.is_valid():
-        form.save()
-        messages.success(request, "Proyek baru berhasil ditambahkan!")
-        return redirect("main:show_project")
+    if request.method == "POST":
+        form = ProjectForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Proyek baru berhasil ditambahkan!")
+            return redirect("main:show_project")
+        messages.error(request, "Proyek baru gagal ditambahkan!")
+    else:
+        form = ProjectForm()
 
     context = {
         "name": "Rasya Azyan Kautsar",
@@ -379,40 +492,65 @@ def delete_project(request, id):
         messages.success(request, "Project telah terhapus!")
     
     return redirect("main:show_project")
-    
-@login_required(login_url="/login/")
-def toggle_star_project(request, id):
-    project = get_object_or_404(Project, pk=id)
-
-    if request.method == "POST":
-        if request.user in project.starred_by.all():
-            project.starred_by.remove(request.user)
-        else:
-            project.starred_by.add(request.user)
-
-    return redirect("main:show_project")
 
 @login_required
 @permission_required('main.view_project', raise_exception=True) 
 def get_projects_json(request):
     title_query = request.GET.get("title", "").strip()
-    projects = Project.objects.all()
+    projects = Project.objects.prefetch_related("starred_by").all()
 
     if title_query:
         projects = projects.filter(title__icontains=title_query)
 
-    projects_json = serializers.serialize("json", projects)
-    return HttpResponse(projects_json, content_type="application/json")
+    data = []
+    for project in projects:
+        starred_users = list(project.starred_by.all())
+        is_starred = (request.user in starred_users if request.user.is_authenticated else False)
 
-@login_required(login_url="/login/")  
-@permission_required('main.add_design', raise_exception=True) 
+        data.append({
+            "pk": str(project.id),
+            "fields": {
+                "title": project.title,
+                "role": project.role,
+                "role_display": project.get_role_display(),
+                "description": project.description,
+                "tech_stack": project.tech_stack,
+                "project_url": project.project_url,
+                "project_image_url": project.project_image_url,
+                "star_count": len(starred_users),
+                "is_starred": is_starred,
+                "starred_by_names": ", ".join(u.username for u in starred_users),
+            },
+        })
+
+    return JsonResponse(data, safe=False)
+
+@login_required(login_url="/login/")
+@require_POST
+def toggle_star_project(request, id):
+    project = get_object_or_404(Project, pk=id)
+
+    if project.starred_by.filter(pk=request.user.pk).exists():
+        project.starred_by.remove(request.user)
+        messages.success(request, f"Star dihapus dari \"{project.title}\".")
+    else:
+        project.starred_by.add(request.user)
+        messages.success(request, f"Star diberikan untuk \"{project.title}\".")
+
+    return redirect("main:show_project")
+
+@login_required(login_url="/login/")
+@permission_required('main.add_design', raise_exception=True)
 def create_design(request):
-    form = DesignForm(request.POST or None)
-
-    if request.method == "POST" and form.is_valid():
-        form.save()
-        messages.success(request, "Design baru berhasil ditambahkan!")
-        return redirect("main:show_project")
+    if request.method == "POST":
+        form = DesignForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Design baru berhasil ditambahkan!")
+            return redirect("main:show_project")
+        messages.error(request, "Design baru gagal ditambahkan!")
+    else:
+        form = DesignForm()
 
     context = {
         "name": "Rasya Azyan Kautsar",
@@ -449,27 +587,71 @@ def delete_design(request, id):
         messages.success(request, "Design telah terhapus!")
     
     return redirect("main:show_project")
-    
-@login_required(login_url="/login/")
-def toggle_star_design(request, id):
-    design = get_object_or_404(Design, pk=id)
-
-    if request.method == "POST":
-        if request.user in design.starred_by.all():
-            design.starred_by.remove(request.user)
-        else:
-            design.starred_by.add(request.user)
-
-    return redirect("main:show_project")
 
 @login_required
 @permission_required('main.view_design', raise_exception=True) 
 def get_designs_json(request):
     title_query = request.GET.get("title", "").strip()
-    designs = Design.objects.all()
+    designs = Design.objects.prefetch_related("starred_by").all()
 
     if title_query:
         designs = designs.filter(title__icontains=title_query)
 
-    designs_json = serializers.serialize("json", designs)
-    return HttpResponse(designs_json, content_type="application/json")
+    data = []
+    for design in designs:
+        starred_users = list(design.starred_by.all())
+        starred_ids = {u.pk for u in starred_users}
+
+        data.append({
+            "pk": str(design.id),
+            "fields": {
+                "title": design.title,
+                "tools": design.tools,
+                "category": design.category,
+                "category_display": design.get_category_display(),
+                "project_url": design.project_url,
+                "project_image_url": design.project_image_url,
+                "star_count": len(starred_users),
+                "is_starred": request.user.pk in starred_ids,
+                "starred_by_names": ", ".join(u.username for u in starred_users),
+            },
+        })
+
+    return JsonResponse(data, safe=False)
+
+@login_required(login_url="/login/")
+@require_POST
+def toggle_star_design(request, id):
+    design = get_object_or_404(Design, pk=id)
+
+    if design.starred_by.filter(pk=request.user.pk).exists():
+        design.starred_by.remove(request.user)
+        messages.success(request, f"Star dihapus dari \"{design.title}\".")
+    else:
+        design.starred_by.add(request.user)
+        messages.success(request, f"Star siberikan untuk \"{design.title}\".")
+
+    return redirect("main:show_project")
+
+#=== Star ===
+STAR_TARGETS = {
+    "experience": (Experience, "main:show_experience"),
+    "message":    (Message,    "main:show_message"),
+    "project":    (Project,    "main:show_project"),
+    "design":     (Design,     "main:show_project"),
+}
+
+@login_required(login_url="/login/")
+@require_POST
+def toggle_star(request, kind, id):
+    if kind not in STAR_TARGETS:
+        raise Http404
+    model, redirect_name = STAR_TARGETS[kind]
+    obj = get_object_or_404(model, pk=id)
+
+    if obj.starred_by.filter(pk=request.user.pk).exists():
+        obj.starred_by.remove(request.user)
+    else:
+        obj.starred_by.add(request.user)
+
+    return redirect(redirect_name)
