@@ -73,3 +73,19 @@ Note: Kredensial akun staff diberikan untuk kebutuhan penilaian tugas dan fimoho
 #AI DISCLOSURE
 
 Tugas 4: Dengan ini saya menyatakan menggunakan bantuan Generative AI dengan model Claude (Sonnet 5, Medium Effort) untuk membantu membuat Flip Card pada halaman Project, toggle pada form project, dan Troubleshooting saat pembuatan model, form, dan views untuk Project. Penggunaan AI dalam hal ini tetap melewati proses pengecekan lebih lanjut, pemahaman kode, dan dapat dipertanggungjawabkan. 
+
+===TUGAS INDIVIDU 5===
+1. Jelaskan apa itu debouncing dan mengapa teknik ini penting diterapkan pada fitur pencarian yang menggunakan AJAX!
+
+Debouncing adalah metode untuk menunda eksekusi request sampai dengan user berhenti melakukan aksi (misalnya searching) selama waktu tertentu. Hal ini perlu dilakukan agar server tidak melambat karena user mengirim request secara terus menerus. Dengan debouncing, jumlah request bisa diminimalisir dan server bisa lebih reliable ketika digunakan secara masif.
+
+2. Jelaskan fungsi dari penggunaan await ketika kita menggunakan fetch()! Apa yang akan terjadi jika kita tidak menggunakan await?
+
+
+
+3. Jelaskan apa itu serangan XSS (Cross-Site Scripting) dan mengapa data yang ditampilkan melalui AJAX/JavaScript lebih rentan terhadap serangan ini daripada data yang ditampilkan langsung melalui template Django!
+
+XSS adalah serangan di mana penyerang menyisipkan script berbahaya lewat input form, lalu script dijalankan di browser pengguna lain, dan berdampak pada penyerang dapat mencuri cookie/session, mengubah tampilan halaman, dan melakukan aksi atas nama korban.
+
+#AI DISCLOSURE
+Tugas 5: Dengan ini saya menyatakan menggunakan bantuan Generative AI dengan model Claude (Sonnet 5, Medium Effort) untuk membantu membuat script pada halaman Project. sPenggunaan AI dalam hal ini tetap melewati proses pengecekan lebih lanjut, pemahaman kode, dan dapat dipertanggungjawabkan. 
