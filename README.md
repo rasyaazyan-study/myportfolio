@@ -81,11 +81,13 @@ Debouncing adalah metode untuk menunda eksekusi request sampai dengan user berhe
 
 2. Jelaskan fungsi dari penggunaan await ketika kita menggunakan fetch()! Apa yang akan terjadi jika kita tidak menggunakan await?
 
-
+await berfungsi untuk menunggu proses fetch() selesai (ketika response dari server diterima) sebelum kode di baris berikutnya diproses. Hal ini dilakukan karena fetch() bersifat asinkron , sehingga yang langsung dikembalikan bukan data, tetapi Promise. Jika tidak menggunakan await, variabel hanya berisi Promise yang masih pending, sehingga kode setelahnya akan berjalan sebelum ada data dan menyebabkan eror atau data tidak tampil.
 
 3. Jelaskan apa itu serangan XSS (Cross-Site Scripting) dan mengapa data yang ditampilkan melalui AJAX/JavaScript lebih rentan terhadap serangan ini daripada data yang ditampilkan langsung melalui template Django!
 
 XSS adalah serangan di mana penyerang menyisipkan script berbahaya lewat input form, lalu script dijalankan di browser pengguna lain, dan berdampak pada penyerang dapat mencuri cookie/session, mengubah tampilan halaman, dan melakukan aksi atas nama korban.
+
+Data yang ditampilkan melalui AJAX/Javascriptlebih rentan terhadap serangan karena template Django otomatis melakukan escaping, sehingga input berbahaya hanya tampil sebagai teks biasa. Sedangkan di JavaScript, data yang masuk lewat innerHTML tidak di-escape secara otomatis, sehingga input berbahaya bisa dianggap sebagai HTML dan script bisa ikut berjalan. Oleh karena itu, kita perlu melakukan escape manual dan dibersihkan di server dengan strip_tags.
 
 #AI DISCLOSURE
 Tugas 5: Dengan ini saya menyatakan menggunakan bantuan Generative AI dengan model Claude (Sonnet 5, Medium Effort) untuk membantu membuat script pada halaman Project. sPenggunaan AI dalam hal ini tetap melewati proses pengecekan lebih lanjut, pemahaman kode, dan dapat dipertanggungjawabkan. 
