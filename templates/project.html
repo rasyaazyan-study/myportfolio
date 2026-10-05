@@ -4,134 +4,541 @@
 {% endblock meta %}
 
 {% block content %}
-
-    <main>
+<main>
     <section class="project-section" id="project">
         <div class="container">
             <p class="section-kicker">Beberapa IT Project yang pernah saya kerjakan</p>
             <h1>Previous <span class="highlights">Project</span></h1>
 
-            {% if user.is_superuser %}
+            {% if perms.main.add_project or perms.main.add_design %}
                 <div class="content-button">
-                    <a href="{% url create_url_name %}" class="add-button floating">+ Add project</a>
+                    <button type="button" class="add-button floating" data-open-modal="portfolio-modal">+ Add</button>
                 </div>
-                <a href="{% url create_url_name %}" class="add-button mobile">+</a>
+                <button type="button" class="add-button mobile" data-open-modal="portfolio-modal" aria-label="Add">+</button>
             {% endif %}
 
-            <div class="project-grid">
-                {% for project in project_list %}
-                    <article class="project-card">
-                        {% if project.project_image_url %}
-                            <img src="{{ project.project_image_url }}" alt="{{ project.title }}">
-                        {% endif %}
-                        <div class = "education-content">
+            <form id="project-search-form" class="project-search">
+                <input type="search" id="project-search-input" name="title"
+                       placeholder="Cari berdasarkan judul project"
+                       class="project-search__input" aria-label="Cari project">
+                <button type="submit" class="button">Cari</button>
+            </form>
 
-                            <span class="project-role">
-                                {{ project.get_role_display }}
-                            </span>
-
-                            <h4 class="project-title">
-                                {{ project.title }}
-                            </h4>
-
-                            <p class="project-stack">
-                                {{ project.stack }}
-                            </p>
-
-                            <p class="project-description">
-                                {{ project.description }}
-                            </p>
-
-                            <div class="card-actions">
-                                <div class="card-star">
-                                    {% include 'components/star_button.html' with obj=project url_name='main:toggle_star_project' %}
-                                </div>
-                                
-                                {% if project.project_url %}
-                                    <a href="{{ project.project_url }}" target="_blank" class="button">Lihat Project</a>
-                                {% endif %}
-                                
-                                {% if perms.main.change_project %}
-                                    <a href="{% url 'main:edit_project' project.pk %}" class="button">Edit</a>
-                                {% endif %}
-
-                                {% if user.is_superuser %}
-                                <form method="post" action="{% url 'main:delete_project' project.pk %}" onsubmit="return confirm('Yakin ingin menghapus pengalaman ini?');">
-                                    {% csrf_token %}
-                                    <button type="submit" class="button button-secondary">Hapus</button>
-                                </form>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </article>
-                {% empty %}
-                    <p class="empty-state">
-                        Belum ada pengalaman yang ditambahkan.
-                    </p>
-                {% endfor %}
-            </div>
+            <div id="project-loading" class="empty-state hide"><p>Memuat project...</p></div>
+            <div id="project-error" class="empty-state hide"><p>Gagal memuat data project. Silakan coba lagi.</p></div>
+            <div id="project-empty" class="empty-state hide"><p>Belum ada project yang ditambahkan atau ditemukan.</p></div>
+            <div id="project-grid" class="project-grid hide"></div>
         </div>
     </section>
 
-    <section class="design-section">
+    <section class="design-section" id="design">
         <div class="container">
             <p class="section-kicker">Beberapa Visual Project yang pernah saya kerjakan</p>
             <h1>Previous <span class="highlights">Design Portfolio</span></h1>
 
-            <div class="design-grid">
-                {% for design in design_list %}
-                    <article class="design-card" tabindex="0">
-                        <div class="design-card-inner">
+            <form id="design-search-form" class="project-search">
+                <input type="search" id="design-search-input" name="title"
+                       placeholder="Cari berdasarkan judul desain"
+                       class="project-search__input" aria-label="Cari desain">
+                <button type="submit" class="button">Cari</button>
+            </form>
 
-                            <div class="design-card-front">
-                                {% if design.project_image_url %}
-                                    <img src="{{ design.project_image_url }}" alt="{{ design.title }}">
-                                {% endif %}
-                            </div>
-
-                            <div class = "design-card-back">
-                                <span class="design-category">
-                                    {{ design.get_category_display }}
-                                </span>
-
-                                <h4 class="design-title">
-                                    {{ design.title }}
-                                </h4>
-
-                                <p class="design-tools">
-                                    {{ design.tools }}
-                                </p>
-
-                                <div class="card-actions">
-                                    <div class="card-star">
-                                        {% include 'components/star_button.html' with obj=design url_name='main:toggle_star_design' %}
-                                    </div>
-                                        {% if design.project_url %}
-                                            <a href="{{ design.project_url }}" target="_blank" class="button">Lihat Project</a>
-                                        {% endif %}
-
-                                        {% if perms.main.change_design %}
-                                            <a href="{% url 'main:edit_design' design.pk %}" class="button">Edit</a>
-                                        {% endif %}
-
-                                        {% if user.is_superuser %}
-                                        <form method="post" action="{% url 'main:delete_design' design.pk %}" onsubmit="return confirm('Yakin ingin menghapus pengalaman ini?');">
-                                            {% csrf_token %}
-                                            <button type="submit" class="button button-secondary">Hapus</button>
-                                        </form>
-                                        {% endif %}
-                                </div>
-                            </div>
-                        </div>
-                    </article>
-                {% empty %}
-                    <p class="empty-state">
-                        Belum ada pengalaman yang ditambahkan.
-                    </p>
-                {% endfor %}
-            </div>
+            <div id="design-loading" class="empty-state hide"><p>Memuat desain...</p></div>
+            <div id="design-error" class="empty-state hide"><p>Gagal memuat data desain. Silakan coba lagi.</p></div>
+            <div id="design-empty" class="empty-state hide"><p>Belum ada desain yang ditambahkan atau ditemukan.</p></div>
+            <div id="design-grid" class="design-grid hide"></div>
         </div>
     </section>
+</main>
 
-    </main>
+{% if perms.main.add_project or perms.main.add_design %}
+<div id="portfolio-modal" class="modal hide" role="dialog" aria-modal="true" aria-labelledby="portfolio-modal-title">
+    <div class="modal__backdrop" data-close-modal></div>
+    <div class="modal__content">
+        <h2 id="portfolio-modal-title">Add New Portfolio Item</h2>
+
+        <div class="portfolio-toggle">
+            {% if perms.main.add_project %}
+                <input type="radio" id="mode_project" name="portfolio_mode" value="project" checked onchange="switchPortfolioMode()">
+                <label for="mode_project" class="toggle-btn toggle-btn-project">Project</label>
+            {% endif %}
+            {% if perms.main.add_design %}
+                <input type="radio" id="mode_design" name="portfolio_mode" value="design"
+                       {% if not perms.main.add_project %}checked{% endif %} onchange="switchPortfolioMode()">
+                <label for="mode_design" class="toggle-btn toggle-btn-design">Design</label>
+            {% endif %}
+        </div>
+
+        {% if perms.main.add_project %}
+        <form id="project-form" class="education-form">
+            {% csrf_token %}
+            {% for field in project_form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                </div>
+            {% endfor %}
+            <button type="submit" class="button">Tambah Project</button>
+            <button type="button" class="button button-secondary" data-close-modal>Batal</button>
+        </form>
+        {% endif %}
+
+        {% if perms.main.add_design %}
+        <form id="design-form" class="education-form hide">
+            {% csrf_token %}
+            {% for field in design_form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                </div>
+            {% endfor %}
+            <button type="submit" class="button">Tambah Design</button>
+            <button type="button" class="button button-secondary" data-close-modal>Batal</button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+<script>
+    const DUMMY_ID = '00000000-0000-0000-0000-000000000000';
+    const IS_AUTH = "{{ user.is_authenticated|yesno:'true,false' }}" === "true";
+    const CAN_EDIT_PROJECT = "{{ perms.main.change_project|yesno:'true,false' }}" === "true";
+    const CAN_DELETE_PROJECT = "{{ perms.main.delete_project|yesno:'true,false' }}" === "true";
+    const CAN_EDIT_DESIGN = "{{ perms.main.change_design|yesno:'true,false' }}" === "true";
+    const CAN_DELETE_DESIGN = "{{ perms.main.delete_design|yesno:'true,false' }}" === "true";
+
+    const BASE_PROJECTS_ENDPOINT = "{% url 'main:get_projects_json' %}";
+    const BASE_DESIGNS_ENDPOINT = "{% url 'main:get_designs_json' %}";
+    const CREATE_PROJECT_ENDPOINT = "{% url 'main:create_project_ajax' %}";
+    const CREATE_DESIGN_ENDPOINT = "{% url 'main:create_design_ajax' %}";
+    const STAR_PROJECT_ENDPOINT = "{% url 'main:toggle_star_project_ajax' '00000000-0000-0000-0000-000000000000' %}";
+    const STAR_DESIGN_ENDPOINT = "{% url 'main:toggle_star_design_ajax' '00000000-0000-0000-0000-000000000000' %}";
+
+    const SEARCH_DEBOUNCE_DELAY = 300;
+    let projectsAbortController;
+    let designsAbortController;
+    let projectSearchDebounceTimer;
+    let designSearchDebounceTimer;
+
+    const projectLoadingState = document.getElementById('project-loading');
+    const projectErrorState = document.getElementById('project-error');
+    const projectEmptyState = document.getElementById('project-empty');
+    const projectGridContainer = document.getElementById('project-grid');
+    const projectSearchForm = document.getElementById('project-search-form');
+    const projectSearchInput = document.getElementById('project-search-input');
+    const projectForm = document.getElementById('project-form');
+
+    const designLoadingState = document.getElementById('design-loading');
+    const designErrorState = document.getElementById('design-error');
+    const designEmptyState = document.getElementById('design-empty');
+    const designGridContainer = document.getElementById('design-grid');
+    const designSearchForm = document.getElementById('design-search-form');
+    const designSearchInput = document.getElementById('design-search-input');
+    const designForm = document.getElementById('design-form');
+
+    const portfolioModal = document.getElementById('portfolio-modal');
+
+    function escapeHtml(str) {
+        return String(str ?? '').replace(/[&<>"']/g, c => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        }[c]));
+    }
+
+    function safeUrl(url) {
+        return /^https?:\/\//i.test(url || '') ? url : '';
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    function displayProjectSection({ showLoading = false, showError = false, showEmpty = false, showGrid = false }) {
+        projectLoadingState.classList.toggle('hide', !showLoading);
+        projectErrorState.classList.toggle('hide', !showError);
+        projectEmptyState.classList.toggle('hide', !showEmpty);
+        projectGridContainer.classList.toggle('hide', !showGrid);
+    }
+
+    function displayDesignSection({ showLoading = false, showError = false, showEmpty = false, showGrid = false }) {
+        designLoadingState.classList.toggle('hide', !showLoading);
+        designErrorState.classList.toggle('hide', !showError);
+        designEmptyState.classList.toggle('hide', !showEmpty);
+        designGridContainer.classList.toggle('hide', !showGrid);
+    }
+
+    function buildProjectCardElement(item) {
+        const project = item.fields;
+        const projectId = item.pk;
+
+        const articleElement = document.createElement('article');
+        articleElement.className = 'project-card';
+
+        const editUrl = "{% url 'main:edit_project' '00000000-0000-0000-0000-000000000000' %}".replace(DUMMY_ID, encodeURIComponent(projectId));
+        const deleteUrl = "{% url 'main:delete_project' '00000000-0000-0000-0000-000000000000' %}".replace(DUMMY_ID, encodeURIComponent(projectId));
+
+        const imageHtml = safeUrl(project.project_image_url)
+            ? `<img src="${escapeHtml(project.project_image_url)}" alt="${escapeHtml(project.title)}">`
+            : '';
+
+        const linkHtml = safeUrl(project.project_url)
+            ? `<a href="${escapeHtml(project.project_url)}" target="_blank" rel="noopener" class="button">Lihat Project</a>`
+            : '';
+
+        const starHtml = IS_AUTH
+            ? `<button type="button" class="button star-btn ${project.is_starred ? 'starred' : ''}"
+                    data-kind="project" data-id="${escapeHtml(projectId)}"
+                    title="${escapeHtml(project.starred_by_names)}">${project.is_starred ? '★' : '☆'} ${escapeHtml(project.star_count)}</button>`
+            : `<span class="button star-badge">☆ ${escapeHtml(project.star_count)}</span>`;
+
+        const editHtml = CAN_EDIT_PROJECT
+            ? `<a href="${editUrl}" class="button">Edit</a>`
+            : '';
+
+        const deleteHtml = CAN_DELETE_PROJECT
+            ? `<form method="post" action="${deleteUrl}" onsubmit="return confirm('Yakin ingin menghapus proyek ini?');">
+                    {% csrf_token %}
+                    <button type="submit" class="button button-secondary">Hapus</button>
+            </form>`
+            : '';
+
+        articleElement.innerHTML = `
+            ${imageHtml}
+            <div class="education-content">
+                <span class="project-role">${escapeHtml(project.role_display)}</span>
+                <h4 class="project-title">${escapeHtml(project.title)}</h4>
+                <p class="project-stack">${escapeHtml(project.tech_stack)}</p>
+                <p class="project-description">${escapeHtml(project.description)}</p>
+                <div class="card-actions">
+                    <div class="card-star">${starHtml}</div>
+                    ${linkHtml}
+                    ${editHtml}
+                    ${deleteHtml}
+                </div>
+            </div>
+        `;
+        return articleElement;
+    }
+
+    function buildDesignCardElement(item) {
+        const design = item.fields;
+        const designId = item.pk;
+
+        const articleElement = document.createElement('article');
+        articleElement.className = 'design-card';
+        articleElement.tabIndex = 0;
+
+        const editUrl = "{% url 'main:edit_design' '00000000-0000-0000-0000-000000000000' %}".replace(DUMMY_ID, encodeURIComponent(designId));
+        const deleteUrl = "{% url 'main:delete_design' '00000000-0000-0000-0000-000000000000' %}".replace(DUMMY_ID, encodeURIComponent(designId));
+
+        const imageHtml = safeUrl(design.project_image_url)
+            ? `<img src="${escapeHtml(design.project_image_url)}" alt="${escapeHtml(design.title)}">`
+            : '';
+
+        const linkHtml = safeUrl(design.project_url)
+            ? `<a href="${escapeHtml(design.project_url)}" target="_blank" rel="noopener" class="button">Lihat Project</a>`
+            : '';
+
+        const starHtml = IS_AUTH
+            ? `<button type="button" class="button star-btn ${design.is_starred ? 'starred' : ''}"
+                    data-kind="design" data-id="${escapeHtml(designId)}"
+                    title="${escapeHtml(design.starred_by_names)}">${design.is_starred ? '★' : '☆'} ${escapeHtml(design.star_count)}</button>`
+            : `<span class="button star-badge">☆ ${escapeHtml(design.star_count)}</span>`;
+
+        const editHtml = CAN_EDIT_DESIGN
+            ? `<a href="${editUrl}" class="button">Edit</a>`
+            : '';
+
+        const deleteHtml = CAN_DELETE_DESIGN
+            ? `<form method="post" action="${deleteUrl}" onsubmit="return confirm('Yakin ingin menghapus desain ini?');">
+                    {% csrf_token %}
+                    <button type="submit" class="button button-secondary">Hapus</button>
+            </form>`
+            : '';
+
+        articleElement.innerHTML = `
+            <div class="design-card-inner">
+                <div class="design-card-front">${imageHtml}</div>
+                <div class="design-card-back">
+                    <span class="design-category">${escapeHtml(design.category_display)}</span>
+                    <h4 class="design-title">${escapeHtml(design.title)}</h4>
+                    <p class="design-tools">${escapeHtml(design.tools)}</p>
+                    <div class="card-actions">
+                        <div class="card-star">${starHtml}</div>
+                        ${linkHtml}
+                        ${editHtml}
+                        ${deleteHtml}
+                    </div>
+                </div>
+            </div>
+        `;
+        return articleElement;
+    }
+
+    async function toggleStar(event, starEndpoint) {
+        const button = event.target.closest('.star-btn');
+        if (!button) return;
+
+        const url = starEndpoint.replace(DUMMY_ID, encodeURIComponent(button.dataset.id));
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },
+            });
+            const result = await response.json().catch(() => ({}));
+
+            if (response.ok) {
+                button.textContent = `${result.is_starred ? '★' : '☆'} ${result.star_count}`;
+                button.classList.toggle('starred', result.is_starred);
+            } else {
+                showToast('Gagal', result.message || 'Tidak dapat memberi star.', 'error');
+            }
+        } catch (error) {
+            console.error('Error toggling star:', error);
+            showToast('Gagal', 'Tidak dapat terhubung ke server.', 'error');
+        }
+    }
+
+    projectGridContainer.addEventListener('click', function (event) {
+        toggleStar(event, STAR_PROJECT_ENDPOINT);
+    });
+
+    designGridContainer.addEventListener('click', function (event) {
+        toggleStar(event, STAR_DESIGN_ENDPOINT);
+    });
+
+    async function addProject(event) {
+        event.preventDefault();
+
+        const submitButton = projectForm.querySelector('button[type="submit"]');
+        submitButton.disabled = true;
+
+        try {
+            const response = await fetch(CREATE_PROJECT_ENDPOINT, {
+                method: 'POST',
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },
+                body: new FormData(projectForm),
+            });
+            const result = await response.json().catch(() => ({}));
+
+            if (response.ok) {
+                projectForm.reset();
+                closePortfolioModal();
+                showToast('Berhasil', result.message || 'Proyek berhasil ditambahkan.', 'success');
+                fetchProjects(projectSearchInput.value.trim());
+            } else {
+                const errorMessages = result.errors
+                    ? Object.entries(result.errors).flatMap(([field, errs]) =>
+                        errs.map(error => `${field}: ${error.message}`))
+                    : [result.message || `Terjadi kesalahan (status ${response.status}).`];
+                showToast('Gagal menambahkan proyek', errorMessages.join(' '), 'error');
+            }
+        } catch (error) {
+            console.error('Error adding project:', error);
+            showToast('Gagal menambahkan proyek', 'Tidak dapat terhubung ke server. Silakan coba lagi.', 'error');
+        } finally {
+            submitButton.disabled = false;
+        }
+    }
+
+    async function addDesign(event) {
+        event.preventDefault();
+
+        const submitButton = designForm.querySelector('button[type="submit"]');
+        submitButton.disabled = true;
+
+        try {
+            const response = await fetch(CREATE_DESIGN_ENDPOINT, {
+                method: 'POST',
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },
+                body: new FormData(designForm),
+            });
+            const result = await response.json().catch(() => ({}));
+
+            if (response.ok) {
+                designForm.reset();
+                closePortfolioModal();
+                showToast('Berhasil', result.message || 'Desain berhasil ditambahkan.', 'success');
+                fetchDesigns(designSearchInput.value.trim());
+            } else {
+                const errorMessages = result.errors
+                    ? Object.entries(result.errors).flatMap(([field, errs]) =>
+                        errs.map(error => `${field}: ${error.message}`))
+                    : [result.message || `Terjadi kesalahan (status ${response.status}).`];
+                showToast('Gagal menambahkan desain', errorMessages.join(' '), 'error');
+            }
+        } catch (error) {
+            console.error('Error adding design:', error);
+            showToast('Gagal menambahkan desain', 'Tidak dapat terhubung ke server. Silakan coba lagi.', 'error');
+        } finally {
+            submitButton.disabled = false;
+        }
+    }
+
+    if (projectForm) {
+        projectForm.addEventListener('submit', addProject);
+    }
+
+    if (designForm) {
+        designForm.addEventListener('submit', addDesign);
+    }
+
+    async function fetchProjects(searchQuery = "") {
+        if (projectsAbortController) projectsAbortController.abort();
+        projectsAbortController = new AbortController();
+
+        try {
+            displayProjectSection({ showLoading: true });
+
+            const url = searchQuery
+                ? `${BASE_PROJECTS_ENDPOINT}?title=${encodeURIComponent(searchQuery)}`
+                : BASE_PROJECTS_ENDPOINT;
+
+            const response = await fetch(url, {
+                headers: { 'Accept': 'application/json' },
+                signal: projectsAbortController.signal,
+            });
+
+            if (!response.ok) throw new Error('Failed to fetch data');
+
+            const projectData = await response.json();
+
+            if (projectData.length === 0) {
+                displayProjectSection({ showEmpty: true });
+            } else {
+                projectGridContainer.innerHTML = '';
+                projectData.forEach(item => {
+                    projectGridContainer.appendChild(buildProjectCardElement(item));
+                });
+                displayProjectSection({ showGrid: true });
+            }
+        } catch (error) {
+            if (error.name === 'AbortError') return;
+            console.error('Error loading projects:', error);
+            displayProjectSection({ showError: true });
+        }
+    }
+
+    async function fetchDesigns(searchQuery = "") {
+        if (designsAbortController) designsAbortController.abort();
+        designsAbortController = new AbortController();
+
+        try {
+            displayDesignSection({ showLoading: true });
+
+            const url = searchQuery
+                ? `${BASE_DESIGNS_ENDPOINT}?title=${encodeURIComponent(searchQuery)}`
+                : BASE_DESIGNS_ENDPOINT;
+
+            const response = await fetch(url, {
+                headers: { 'Accept': 'application/json' },
+                signal: designsAbortController.signal,
+            });
+
+            if (!response.ok) throw new Error('Failed to fetch data');
+
+            const designData = await response.json();
+
+            if (designData.length === 0) {
+                displayDesignSection({ showEmpty: true });
+            } else {
+                designGridContainer.innerHTML = '';
+                designData.forEach(item => {
+                    designGridContainer.appendChild(buildDesignCardElement(item));
+                });
+                displayDesignSection({ showGrid: true });
+            }
+        } catch (error) {
+            if (error.name === 'AbortError') return;
+            console.error('Error loading designs:', error);
+            displayDesignSection({ showError: true });
+        }
+    }
+
+    function searchProjects() {
+        fetchProjects(projectSearchInput.value.trim());
+    }
+
+    function searchDesigns() {
+        fetchDesigns(designSearchInput.value.trim());
+    }
+
+    projectSearchInput.addEventListener("input", function () {
+        clearTimeout(projectSearchDebounceTimer);
+
+        projectSearchDebounceTimer = setTimeout(function () {
+            searchProjects();
+        }, SEARCH_DEBOUNCE_DELAY);
+    });
+
+    projectSearchForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+        clearTimeout(projectSearchDebounceTimer);
+        searchProjects();
+    });
+
+    designSearchInput.addEventListener("input", function () {
+        clearTimeout(designSearchDebounceTimer);
+
+        designSearchDebounceTimer = setTimeout(function () {
+            searchDesigns();
+        }, SEARCH_DEBOUNCE_DELAY);
+    });
+
+    designSearchForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+        clearTimeout(designSearchDebounceTimer);
+        searchDesigns();
+    });
+
+    function switchPortfolioMode() {
+        const checked = document.querySelector('input[name="portfolio_mode"]:checked');
+        if (!checked) return;
+
+        projectForm.classList.toggle('hide', checked.value !== 'project');
+        designForm.classList.toggle('hide', checked.value !== 'design');
+    }
+
+    function openPortfolioModal() {
+        if (!portfolioModal) return;
+        portfolioModal.classList.remove('hide');
+        document.body.style.overflow = 'hidden';
+        switchPortfolioMode();
+    }
+
+    function closePortfolioModal() {
+        if (!portfolioModal) return;
+        portfolioModal.classList.add('hide');
+        document.body.style.overflow = '';
+    }
+
+    document.querySelectorAll('[data-open-modal="portfolio-modal"]').forEach(el => {
+        el.addEventListener('click', openPortfolioModal);
+    });
+
+    document.querySelectorAll('[data-close-modal]').forEach(el => {
+        el.addEventListener('click', closePortfolioModal);
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && portfolioModal && !portfolioModal.classList.contains('hide')) {
+            closePortfolioModal();
+        }
+    });
+
+    fetchProjects(projectSearchInput.value.trim());
+    fetchDesigns(designSearchInput.value.trim());
+</script>
 {% endblock content %}

@@ -24,6 +24,7 @@
     --dark-green: #008C16;
     --red-button: #EE2737;
     --dark-red: #AF272E;
+    --warm-white: #f9f6f2;
 
     /* default */
     
@@ -362,6 +363,69 @@ h1, .brand {
 
 .card:nth-child(even) {
     flex-direction: row-reverse;
+}
+
+/* Slider */
+
+.slider {
+    justify-content: center;
+    padding-bottom: 2rem;
+}
+
+.slider h1 {
+    color: var(--black);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.marquee {
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    margin-bottom: 4rem;
+}
+
+.track {
+    display: flex;
+    align-items: center;
+    gap: 150px;
+    width: max-content;
+    animation: scroll 12s linear infinite;
+}
+
+.track img {
+    height: 100px;
+    flex-shrink: 0;
+}
+
+.marquee.reverse .track {
+  animation-direction: reverse;
+}
+
+.track:hover {
+  animation-play-state: paused;
+}
+
+.slider {
+    position: relative;
+    background: var(--warm-white);
+}
+
+.wave {
+    position: absolute;
+    z-index: 2;
+    top: -79px;
+    left: 0;
+    width: 100%;
+    height: 120px;
+    fill: var(--warm-white);
+}
+
+@keyframes scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }
 
 /* Tutor 2 (MVT Django): Organizational Experience*/
@@ -1034,7 +1098,7 @@ h1, .brand {
 
 .project-card {
     display: flex;
-    max-width: 900px;
+    width: 85%;
     margin: 1.3rem 0;
     gap: 2rem;
     border-radius: var(--card-radius);
@@ -1096,6 +1160,8 @@ h1, .brand {
 .project-stack {
     flex: 1;
     min-width: 0;
+    color: var(--dark-green);
+    font-weight: 500;
 }  
 
 /* Design */
@@ -1394,6 +1460,53 @@ h1, .brand {
     padding: 1rem 0;
 }
 
+/* Star */
+.button-star,
+.button.star-badge {
+    margin-top: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.star-icon {
+    width: 1.1em;
+    height: 1.1em;
+    fill: transparent;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linejoin: round;
+    transition: fill 0.2s ease, transform 0.2s ease;
+}
+
+.button-star:hover .star-icon {
+    transform: scale(1.15);
+}
+
+.button-star.is-starred .star-icon {
+    fill: currentColor;
+}
+
+.button.star-btn.is-starred {
+    background-color: var(--green-button);
+    color: var(--white);
+}
+
+.button.star-btn.is-starred:hover {
+    background-color: var(--white);
+    color: var(--green-button);
+}
+
+.button.star-badge {
+    cursor: default;
+    background-color: var(--green-button);
+}
+
+.button.star-badge:hover {
+    background-color: var(--green-button);
+    color: var(--white);
+}
+
 @media (max-width: 600px) {
 
     #profile {
@@ -1654,6 +1767,7 @@ h1, .brand {
 
     .project-card {
         flex-direction: column;
+        width: 100%;
     }
 
     .project-card img {
@@ -1682,4 +1796,28 @@ h1, .brand {
         display: none;
     }
 
+    /*slider @profile page*/
+
+    .wave {
+        height: 40px;
+        top: -39px;
+    }
+
+    .track {
+        gap: 60px;
+    }
+
+    .track img {
+        height: 60px;
+    }
+
+    .slider h1 {
+        font-size: 1.5rem;
+        padding: 1rem;
+        margin: 1rem 0;
+    }
+
+    .marquee {
+        margin-bottom: 2rem;
+    }
 }

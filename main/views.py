@@ -436,34 +436,20 @@ def toggle_star_message(request, id):
 def show_project(request):
     context = {
         "name": "Rasya Azyan Kautsar",
-        "project_list": Project.objects.all(),
-        "design_list": Design.objects.all(),
         "project_form": ProjectForm(),
         "design_form": DesignForm(),
-        "create_url_name": "main:create_project",
     }
     return render(request, "project.html", context)
 
-@login_required(login_url="/login/")
-@permission_required('main.add_project', raise_exception=True)
-def create_project(request):
-    if request.method == "POST":
-        form = ProjectForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Proyek baru berhasil ditambahkan!")
-            return redirect("main:show_project")
-        messages.error(request, "Proyek baru gagal ditambahkan!")
-    else:
-        form = ProjectForm()
-
-    context = {
-        "name": "Rasya Azyan Kautsar",
-        "form": form,
-        "item_type": "project",
-        "page_title": "Add New Project",
-    }
-    return render(request, "portfolio_form.html", context)
+@require_POST
+def create_project_ajax(request):
+    if not request.user.has_perm("main.add_project"):
+        return JsonResponse({"message": "Anda tidak memiliki izin untuk menambahkan proyek."}, status=403)
+    form = ProjectForm(request.POST)
+    if form.is_valid():
+        project = form.save()
+        return JsonResponse({"message": "Proyek berhasil ditambahkan.", "pk": str(project.pk)}, status=201)
+    return JsonResponse({"errors": form.errors.get_json_data()}, status=400)
 
 @login_required(login_url="/login/")
 @permission_required('main.change_project', raise_exception=True) 
@@ -480,7 +466,11 @@ def edit_project(request, id):
         "name": "Rasya Azyan Kautsar",
         "form": form,
     }
-    return render(request, "portfolio_form.html", context)
+    return render(request, "portfolio_form.html", {
+        "name": "Rasya Azyan Kautsar",
+        "form": form,
+        "page_title": "Edit Project",
+    })
 
 @login_required(login_url="/login/")
 @permission_required('main.delete_project', raise_exception=True) 
@@ -493,20 +483,16 @@ def delete_project(request, id):
     
     return redirect("main:show_project")
 
-@login_required
-@permission_required('main.view_project', raise_exception=True) 
 def get_projects_json(request):
     title_query = request.GET.get("title", "").strip()
     projects = Project.objects.prefetch_related("starred_by").all()
-
     if title_query:
         projects = projects.filter(title__icontains=title_query)
 
     data = []
     for project in projects:
         starred_users = list(project.starred_by.all())
-        is_starred = (request.user in starred_users if request.user.is_authenticated else False)
-
+        starred_ids = {u.pk for u in starred_users}
         data.append({
             "pk": str(project.id),
             "fields": {
@@ -518,47 +504,35 @@ def get_projects_json(request):
                 "project_url": project.project_url,
                 "project_image_url": project.project_image_url,
                 "star_count": len(starred_users),
-                "is_starred": is_starred,
+                "is_starred": request.user.is_authenticated and request.user.pk in starred_ids,
                 "starred_by_names": ", ".join(u.username for u in starred_users),
             },
         })
-
     return JsonResponse(data, safe=False)
 
-@login_required(login_url="/login/")
 @require_POST
-def toggle_star_project(request, id):
-    project = get_object_or_404(Project, pk=id)
+def toggle_star_project_ajax(request, id):
+    if not request.user.is_authenticated:
+        return JsonResponse({"message": "Silakan login untuk memberi star."}, status=403)
 
+    project = get_object_or_404(Project, pk=id)
     if project.starred_by.filter(pk=request.user.pk).exists():
         project.starred_by.remove(request.user)
-        messages.success(request, f"Star dihapus dari \"{project.title}\".")
+        starred = False
     else:
         project.starred_by.add(request.user)
-        messages.success(request, f"Star diberikan untuk \"{project.title}\".")
+        starred = True
+    return JsonResponse({"is_starred": starred, "star_count": project.starred_by.count()})
 
-    return redirect("main:show_project")
-
-@login_required(login_url="/login/")
-@permission_required('main.add_design', raise_exception=True)
-def create_design(request):
-    if request.method == "POST":
-        form = DesignForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Design baru berhasil ditambahkan!")
-            return redirect("main:show_project")
-        messages.error(request, "Design baru gagal ditambahkan!")
-    else:
-        form = DesignForm()
-
-    context = {
-        "name": "Rasya Azyan Kautsar",
-        "form": form,
-        "item_type": "design",
-        "page_title": "Add New Design",
-    }
-    return render(request, "portfolio_form.html", context)
+@require_POST
+def create_design_ajax(request):
+    if not request.user.has_perm("main.add_design"):
+        return JsonResponse({"message": "Anda tidak memiliki izin untuk menambahkan desain."}, status=403)
+    form = DesignForm(request.POST)
+    if form.is_valid():
+        design = form.save()
+        return JsonResponse({"message": "Desain berhasil ditambahkan.", "pk": str(design.pk)}, status=201)
+    return JsonResponse({"errors": form.errors.get_json_data()}, status=400)
 
 @login_required(login_url="/login/")
 @permission_required('main.change_design', raise_exception=True) 
@@ -575,8 +549,12 @@ def edit_design(request, id):
         "name": "Rasya Azyan Kautsar",
         "form": form,
     }
-    return render(request, "portfolio_form.html", context)
-
+    return render(request, "portfolio_form.html", {
+        "name": "Rasya Azyan Kautsar",
+        "form": form,
+        "page_title": "Edit Design",
+    })
+    
 @login_required(login_url="/login/")
 @permission_required('main.delete_design', raise_exception=True) 
 def delete_design(request, id):
@@ -588,12 +566,9 @@ def delete_design(request, id):
     
     return redirect("main:show_project")
 
-@login_required
-@permission_required('main.view_design', raise_exception=True) 
 def get_designs_json(request):
     title_query = request.GET.get("title", "").strip()
     designs = Design.objects.prefetch_related("starred_by").all()
-
     if title_query:
         designs = designs.filter(title__icontains=title_query)
 
@@ -601,7 +576,6 @@ def get_designs_json(request):
     for design in designs:
         starred_users = list(design.starred_by.all())
         starred_ids = {u.pk for u in starred_users}
-
         data.append({
             "pk": str(design.id),
             "fields": {
@@ -612,26 +586,25 @@ def get_designs_json(request):
                 "project_url": design.project_url,
                 "project_image_url": design.project_image_url,
                 "star_count": len(starred_users),
-                "is_starred": request.user.pk in starred_ids,
+                "is_starred": request.user.is_authenticated and request.user.pk in starred_ids,
                 "starred_by_names": ", ".join(u.username for u in starred_users),
             },
         })
-
     return JsonResponse(data, safe=False)
 
-@login_required(login_url="/login/")
 @require_POST
-def toggle_star_design(request, id):
-    design = get_object_or_404(Design, pk=id)
+def toggle_star_design_ajax(request, id):
+    if not request.user.is_authenticated:
+        return JsonResponse({"message": "Silakan login untuk memberi star."}, status=403)
 
+    design = get_object_or_404(Design, pk=id)
     if design.starred_by.filter(pk=request.user.pk).exists():
         design.starred_by.remove(request.user)
-        messages.success(request, f"Star dihapus dari \"{design.title}\".")
+        starred = False
     else:
         design.starred_by.add(request.user)
-        messages.success(request, f"Star siberikan untuk \"{design.title}\".")
-
-    return redirect("main:show_project")
+        starred = True
+    return JsonResponse({"is_starred": starred, "star_count": design.starred_by.count()})
 
 #=== Star ===
 STAR_TARGETS = {
