@@ -32,7 +32,7 @@ def register(request):
     if request.method == "POST" and form.is_valid():
         form.save()
         messages.success(request, "Akun berhasil dibuat. Silakan login.")
-        return redirect("main:login")
+        return redirect("main:show_main")
 
     context = {
         "name": "Rasya Azyan Kautsar",
