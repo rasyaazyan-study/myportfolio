@@ -91,3 +91,43 @@ Data yang ditampilkan melalui AJAX/Javascriptlebih rentan terhadap serangan kare
 
 #AI DISCLOSURE
 Tugas 5: Dengan ini saya menyatakan menggunakan bantuan Generative AI dengan model Claude (Sonnet 5, Medium Effort) untuk membantu membuat script pada halaman Project. sPenggunaan AI dalam hal ini tetap melewati proses pengecekan lebih lanjut, pemahaman kode, dan dapat dipertanggungjawabkan. 
+
+=== TUGAS INDIVIDU 5 ===
+
+1. Jelaskan apa yang dimaksud dengan REST dan mengapa mengembalikan JSON saja belum cukup untuk menyebut sebuah API sebagai RESTful! Jelaskan pula perbedaan PUT dan PATCH beserta contoh kapan masing-masing sebaiknya digunakan!
+
+REST (Representational State Transfer) adalah gaya arsitektur untuk merancang web API, bukan library atau format data. Karena itu, API yang mengembalikan JSON belum tentu RESTful. Yang menentukan adalah cara API tersebut diatur.
+
+Pada REST, Data diperlakukan sebagai resource. URL menunjuk data, misalnya /api/v1/projects/ untuk kumpulan proyek dan /api/v1/projects/<uuid>/ untuk satu proyek.
+HTTP method menyatakan tindakan. GET membaca, POST membuat, PUT/PATCH mengubah, dan DELETE menghapus, sehingga tindakan tidak perlu ditulis di URL.
+Klien dan server bertukar representasi data. Klien mengirim dan menerima JSON, bukan objek Python atau baris database. (Source: Tutorial 7 PBP)
+
+Sebagai contoh, `POST /projects/<uuid>/delete/` memang mengembalikan JSON, tetapi tindakan "hapus" ditulis di URL dan memakai method POST, jadi bukan seperti REST. Versi RESTful-nya adalah `DELETE /api/v1/projects/<uuid>/`. Inilah alasan kenapa JSON saja belum cukup, karena yang dinilai adalah cara resource dan method dirancang, bukan format datanya.
+
+Perbedaan PUT dan PATCH:
+a. `PUT` mengganti seluruh data, sehingga klien harus mengirim semua field. Cocok dipakai saat form edit mengirim data lengkap, misalnya mengedit judul, deskripsi, tech stack, dan URL proyek sekaligus.
+b. `PATCH` hanya mengubah field yang dikirim, field lain dibiarkan. Cocok dipakai untuk perubahan kecil, misalnya hanya memperbaiki typo pada deskripsi atau hanya mengisi `ended_at` saat pendidikan selesai.
+
+2. Jelaskan peran serializer pada Django REST Framework! Apa keuntungannya dibandingkan merakit dictionary secara manual dengan JsonResponse seperti pada Tutorial 05?
+
+DRF adalah toolkit di atas Django untuk membangun web API. Model dan ORM tetap dipakai. Kita menambahkan serializer untuk representasi dan validasi data, serta API view yang menangani request dan response. (Source: PBP Tutorial 7)
+
+Serializer bekerja dua arah:
+a. Pada GET, serializer mengubah objek model menjadi tipe data Python yang dapat dirender ke JSON.
+b. Pada POST/PATCH, serializer mengubah input menjadi data yang sudah divalidasi dan siap disimpan.
+
+Hasil serializer belum berupa string JSON. Renderer DRF yang mengubahnya menjadi isi response.
+
+Keuntungannya dibanding merakit dictionary secar manual dengan `JsonResponse` adalah Validasi menjadi terintegrasi, dengan `is_valid(raise_exception=True)`, input yang salah otomatis ditolak dengan status 400 beserta pesan error per field. Dulu validasi memakai form dan `form.errors.get_json_data()` secara terpisah.
+
+3. Jelaskan perbedaan autentikasi dan otorisasi pada Django REST Framework! Mengapa hak akses harus diperiksa dengan permission class di server, bukan hanya dengan menyembunyikan tombol di template?
+
+a. Autentikasi lebih untuk mengetahui siapa pengirimnya. Pada tahap Autentikasi, `SessionAuthentication` mengisi `request.user` dari sesi login. Pengunjung yang belum login tidak ditolak di tahap ini, tetapi diperlakukan sebagai anonim.
+b. Sedangkan Otorisasi lebih mengarah ke pertanyaan "apakah request boleh diteruskan?". Tahap Otorisasi dikerjakan oleh permission class, dan jika gagal hasilnya 403. (Source: PBP Tutorial 7)
+
+Hak akses harus diperiksa di server karena menyembunyikan tombol di template hanya mengubah tampilan. Template hanya berjalan di sisi browser, sehingga siapa pun tetap bisa mengirim request langsung ke API lewat DevTools, `curl`, atau Postman, misalnya `DELETE /api/v1/education/<uuid>/`, tanpa pernah melihat tombolnya. Jika server tidak memeriksa permission, request akan diproses begitu saja. Jadi tombol bisa disembunyikan untuk kenyamanan pengguna, tetapi hak akses dijalankan di server demi keamanan.
+
+#AI DISCLOSURE
+
+Tugas 5: Dengan ini saya menyatakan menggunakan bantuan Generative AI dengan model Claude (Sonnet 5, Medium Effort) untuk membantu membuat function education_list & education_details (pada api_views.py), EducationSerializer (pada serializers.py), dan kode JavaScript (pada education.html). Penggunaan AI dalam hal ini tetap melewati proses pengecekan lebih lanjut, dan dapat dipertanggungjawabkan.
+

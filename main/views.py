@@ -7,6 +7,7 @@ from main.forms import ExperienceForm, EducationForm, ContactForm, MessageForm, 
 
 from django.contrib import messages
 from django.core import serializers
+from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
@@ -199,8 +200,9 @@ def show_education(request):
     return render(request, "education.html", context)
 
 @login_required(login_url="/login/")
-@permission_required('main.add_education', raise_exception=True)
-def create_education(request):    
+def create_education(request):
+    if not request.user.is_superuser:
+        raise PermissionDenied
     form = EducationForm(request.POST or None, request.FILES or None)
 
     if request.method == "POST" and form.is_valid():
@@ -215,8 +217,11 @@ def create_education(request):
     return render(request, "education_form.html", context)
 
 @login_required(login_url="/login/")
-@permission_required('main.change_education', raise_exception=True)
-def edit_education(request, id):    
+def edit_education(request, id):
+    if not (request.user.is_superuser
+            or request.user.groups.filter(name="Editor").exists()):
+        raise PermissionDenied
+    
     education = get_object_or_404(Education, pk=id)
     form = EducationForm(request.POST or None, request.FILES or None, instance=education)
     
@@ -234,6 +239,8 @@ def edit_education(request, id):
 @login_required(login_url="/login/")
 @permission_required('main.delete_education', raise_exception=True)
 def delete_education(request, id):
+    if not request.user.is_superuser:
+        raise PermissionDenied
     education = get_object_or_404(Education, pk=id)
     
     if request.method == "POST":
